@@ -1,0 +1,45 @@
+{
+  "name": "evvm-js",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.ts",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**/*.cjs",
+    "dist/**/*.d.ts",
+    "dist/**/*.mjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EVVM-org/evvm-js.git"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/EVVM-org/evvm-js/issues"
+  },
+  "homepage": "https://github.com/EVVM-org/evvm-js#readme",
+  "scripts": {
+    "build": "bun run build:types && bun run build:cjs && bun run build:esm",
+    "build:cjs": "bun build src/index.ts --minify --target=node --outfile=dist/index.cjs --format=cjs",
+    "build:esm": "bun build src/index.ts --minify --target=node --outfile=dist/index.mjs --format=esm",
+    "build:types": "tsc",
+    "prepublishOnly": "bun run build"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "ethers": "^6.16.0",
+    "viem": "^2.41.2"
+  }
+}
