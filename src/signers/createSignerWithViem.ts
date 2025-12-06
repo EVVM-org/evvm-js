@@ -1,5 +1,6 @@
 import type { WalletClient } from "viem";
 import type { ISigner } from "@/types/signer.type";
+import { readContract } from "viem/actions";
 
 /**
  * Creates an evvm signer using viem's WalletClient
@@ -21,12 +22,7 @@ export const createSignerWithViem = async (
         message,
       });
     },
-    async sendTransaction({
-      contractAbi,
-      contractAddress,
-      args,
-      functionName,
-    }) {
+    async writeContract({ contractAbi, contractAddress, args, functionName }) {
       return walletClient.writeContract({
         abi: contractAbi,
         address: contractAddress,
@@ -35,6 +31,17 @@ export const createSignerWithViem = async (
         functionName,
         args: [...args],
       });
+    },
+    async readContract({ contractAbi, contractAddress, args, functionName }) {
+      const res = await readContract(walletClient, {
+        abi: contractAbi,
+        address: contractAddress,
+        account: address,
+        functionName,
+        args: [...args],
+      });
+
+	  return res as any
     },
   };
 };

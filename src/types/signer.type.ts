@@ -7,6 +7,10 @@ interface ISendTransactionParams {
   args: any[];
 }
 
+/**
+ * Abstracted signer interface that works with more than one
+ * client-side ethereum library (like ethersjs or viem)
+ */
 export interface ISigner {
   /**
    * Signer address
@@ -21,5 +25,10 @@ export interface ISigner {
    * Signs and sends a transaction to the network
    * @returns tx hash
    */
-  sendTransaction(params: ISendTransactionParams): Promise<HexString>; // txHash
+  writeContract(params: ISendTransactionParams): Promise<HexString>; // txHash
+  /**
+   * Calls view methods
+   * @returns whatever the contract returns
+   */
+  readContract<T>(params: ISendTransactionParams): Promise<T>;
 }

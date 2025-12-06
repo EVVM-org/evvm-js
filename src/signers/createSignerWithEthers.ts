@@ -17,12 +17,7 @@ export const createSignerWithEthers = async (
     async signMessage(message) {
       return signer.signMessage(message);
     },
-    async sendTransaction({
-      contractAbi,
-      contractAddress,
-      args,
-      functionName,
-    }) {
+    async writeContract({ contractAbi, contractAddress, args, functionName }) {
       const contract = new Contract(contractAddress, contractAbi, signer);
 
       if (!contract[functionName]) {
@@ -35,6 +30,17 @@ export const createSignerWithEthers = async (
       await tx.wait();
 
       return tx.hash;
+    },
+    async readContract({ contractAddress, contractAbi, args, functionName }) {
+      const contract = new Contract(contractAddress, contractAbi, signer);
+
+      if (!contract[functionName]) {
+        throw new Error(
+          `Trying to call a function not present in contract ABI\n functionName: ${functionName}`,
+        );
+      }
+
+      return await contract[functionName](...args);
     },
   };
 };
