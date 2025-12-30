@@ -30,10 +30,17 @@ export abstract class BaseService extends SignatureBuilder {
   /**
    * Returns a valid Sync nonce for the given service
    */
-  abstract getSyncNonce(): Promise<bigint>;
+  async getSyncNonce(): Promise<bigint> {
+    return this.view<bigint>("getNextCurrentSyncNonce", [this.signer.address]);
+  }
 
   /**
    * Used to assert a given async nonce hasn't been used
    */
-  abstract isValidAsyncNonce(nonce: bigint): Promise<boolean>;
+  async isValidAsyncNonce(nonce: bigint): Promise<boolean> {
+    return this.view<boolean>("getIfUsedAsyncNonce", [
+      this.signer.address,
+      nonce,
+    ]);
+  }
 }
