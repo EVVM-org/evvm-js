@@ -4,12 +4,14 @@ import { SignatureBuilder } from "./signature-builder";
 
 export abstract class BaseService extends SignatureBuilder {
   address: HexString;
+  evvmId: number;
   abi: any;
 
-  constructor(signer: ISigner, address: HexString, abi: any) {
+  constructor(signer: ISigner, address: HexString, abi: any, evvmId: number) {
     super(signer);
     this.address = address;
     this.abi = abi;
+    this.evvmId = evvmId;
   }
 
   /**
