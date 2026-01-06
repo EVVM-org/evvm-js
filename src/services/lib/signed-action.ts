@@ -43,7 +43,6 @@ export class SignedAction<T extends IBaseDataSchema> {
 
   private mapDataToArgs(): any[] {
     let args: any[] = [];
-    const serializedData = this.serializeData();
 
     const functionAbi = this.service.abi.find(
       (item) => item.type === "function" && item.name === this.functionName,
@@ -52,8 +51,20 @@ export class SignedAction<T extends IBaseDataSchema> {
     if (!functionAbi)
       throw new Error(`No function signature with name ${this.functionName}`);
 
-    // populate args
+    // populate args (validate presence). Keep values serialized for transport.
+    const serializedData = this.serializeData();
     functionAbi.inputs.forEach((input, index) => {
+      if (!input.name || input.name.length === 0)
+        throw new Error(
+          `ABI input at index ${index} for function ${this.functionName} has empty name`,
+        );
+
+      if (!Object.prototype.hasOwnProperty.call(serializedData, input.name))
+        throw new Error(
+          `Missing data property '${input.name}' for function '${this.functionName}'`,
+        );
+
+      // keep serialized representation (strings for bigints, nested objects/arrays preserved)
       args[index] = serializedData[input.name];
     });
 
@@ -61,11 +72,17 @@ export class SignedAction<T extends IBaseDataSchema> {
   }
 
   private serializeData(): T {
-    return Object.fromEntries(
-      Object.entries(this.data).map(([key, value]) => [
-        key,
-        typeof value === "bigint" ? value.toString() : value,
-      ]),
-    ) as T;
+    const deepSerialize = (value: any): any => {
+      if (typeof value === "bigint") return value.toString();
+      if (Array.isArray(value)) return value.map((v) => deepSerialize(v));
+      if (value && typeof value === "object") {
+        return Object.fromEntries(
+          Object.entries(value).map(([k, v]) => [k, deepSerialize(v)]),
+        );
+      }
+      return value;
+    };
+
+    return deepSerialize(this.data) as T;
   }
 }
