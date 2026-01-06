@@ -19,7 +19,7 @@ export const execute = async <T extends IBaseDataSchema>(
   return signer.writeContract({
     contractAbi: [serializedAction.functionAbi],
     contractAddress: serializedAction.contractAddress,
-    args: serializedAction.args, // todo: deserialize?
+    args: serializedAction.args,
     functionName: serializedAction.functionName,
   });
 };
