@@ -1,16 +1,18 @@
 import type { HexString } from "@/types/hexstring.type";
 import type { BaseService } from "./base-service";
+import type { IAbiItem } from "@/types/abi.type";
 
-interface IBaseDataSchema {
+export interface IBaseDataSchema {
   signature: string;
   from: HexString;
   nonce: bigint | string;
   [key: string]: any;
 }
 
-interface ISerializableSignedAction<T> {
+export interface ISerializableSignedAction<T> {
   evvmId: number;
   functionName: string;
+  functionAbi: IAbiItem;
   contractAddress: HexString;
   data: T;
   args: any[];
@@ -20,13 +22,15 @@ export class SignedAction<T extends IBaseDataSchema> {
   service: BaseService;
   functionName: string;
   data: T;
+  functionAbi: IAbiItem;
   args: any[];
 
   constructor(service: BaseService, functionName: string, data: T) {
     this.service = service;
     this.functionName = functionName;
     this.data = data;
-    this.args = this.mapDataToArgs();
+    this.functionAbi = this.getFunctionAbi();
+    this.args = this.getArgs();
   }
 
   toJSON(): ISerializableSignedAction<T> {
@@ -35,15 +39,14 @@ export class SignedAction<T extends IBaseDataSchema> {
     return {
       evvmId: this.service.evvmId,
       functionName: this.functionName,
+      functionAbi: this.functionAbi,
       contractAddress: this.service.address,
       data: serializedData,
       args: this.args,
     };
   }
 
-  private mapDataToArgs(): any[] {
-    let args: any[] = [];
-
+  private getFunctionAbi() {
     const functionAbi = this.service.abi.find(
       (item) => item.type === "function" && item.name === this.functionName,
     );
@@ -51,9 +54,15 @@ export class SignedAction<T extends IBaseDataSchema> {
     if (!functionAbi)
       throw new Error(`No function signature with name ${this.functionName}`);
 
+    return functionAbi;
+  }
+
+  private getArgs(): any[] {
+    let args: any[] = [];
+
     // populate args (validate presence). Keep values serialized for transport.
     const serializedData = this.serializeData();
-    functionAbi.inputs.forEach((input, index) => {
+    this.functionAbi.inputs.forEach((input, index) => {
       if (!input.name || input.name.length === 0)
         throw new Error(
           `ABI input at index ${index} for function ${this.functionName} has empty name`,
