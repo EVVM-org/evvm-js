@@ -49,8 +49,8 @@ export class EVVM extends BaseService {
 
     return new SignedAction(this, "pay", {
       from: this.signer.address,
-      toAddress,
-      toIdentity,
+      to_address: toAddress,
+      to_identity: toIdentity,
       token: tokenAddress,
       amount,
       priorityFee,

@@ -1,13 +1,14 @@
 import type { HexString } from "@/types/hexstring.type";
 import type { ISigner } from "@/types/signer.type";
 import { SignatureBuilder } from "./signature-builder";
+import type { IAbi } from "@/types/abi.type";
 
 export abstract class BaseService extends SignatureBuilder {
   address: HexString;
   evvmId: number;
-  abi: any;
+  abi: IAbi;
 
-  constructor(signer: ISigner, address: HexString, abi: any, evvmId: number) {
+  constructor(signer: ISigner, address: HexString, abi: IAbi, evvmId: number) {
     super(signer);
     this.address = address;
     this.abi = abi;

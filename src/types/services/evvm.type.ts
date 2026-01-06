@@ -2,8 +2,8 @@ import type { HexString } from "../hexstring.type";
 
 export interface IPayData {
   from: HexString;
-  toAddress?: HexString;
-  toIdentity?: string;
+  to_address?: HexString;
+  to_identity?: string;
   token: HexString;
   amount: bigint;
   priorityFee?: bigint;

@@ -1,8 +1,9 @@
+import type { IAbi } from "./abi.type";
 import type { HexString } from "./hexstring.type";
 
 interface ISendTransactionParams {
   contractAddress: HexString;
-  contractAbi: any;
+  contractAbi: IAbi;
   functionName: string;
   args: any[];
 }

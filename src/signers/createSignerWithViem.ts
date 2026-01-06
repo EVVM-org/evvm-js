@@ -41,7 +41,7 @@ export const createSignerWithViem = async (
         args: [...args],
       });
 
-	  return res as any
+      return res as any;
     },
   };
 };
