@@ -18,6 +18,10 @@ export interface ISigner {
    */
   address: HexString;
   /**
+   * Connected network id
+   */
+  chainId: number;
+  /**
    * Signs an arbitrary message
    * @returns the generated signature
    */

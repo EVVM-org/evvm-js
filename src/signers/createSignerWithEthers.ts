@@ -12,8 +12,12 @@ export const createSignerWithEthers = async (
 ): Promise<ISigner> => {
   const address = (await signer.getAddress()) as HexString;
 
+  const network = await signer.provider?.getNetwork();
+  if (!network) throw new Error("No network returned from provider");
+
   return {
     address,
+    chainId: Number(network.chainId),
     async signMessage(message) {
       return signer.signMessage(message);
     },
