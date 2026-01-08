@@ -6,8 +6,8 @@ import type { IPayData } from "@/types/services/evvm.type";
 import { SignedAction } from "./lib/signed-action";
 
 export class EVVM extends BaseService {
-  constructor(signer: ISigner, address: HexString, evvmId: number) {
-    super(signer, address, EvvmABI, evvmId);
+  constructor(signer: ISigner, address: HexString) {
+    super(signer, address, EvvmABI);
   }
 
   /**
@@ -40,7 +40,10 @@ export class EVVM extends BaseService {
       `${priorityFlag ? "true" : "false"},` +
       `${executor && executor.toLowerCase()}`;
 
-    const message = `${this.evvmId},pay,${inputs}`;
+
+	const evvmId = await this.getEvvmID()
+
+    const message = `${evvmId},pay,${inputs}`;
 
     const signature = await this.signERC191Message(message);
 

@@ -5,14 +5,14 @@ import type { IAbi } from "@/types/abi.type";
 
 export abstract class BaseService extends SignatureBuilder {
   address: HexString;
-  evvmId: number;
   abi: IAbi;
+  chainId: number;
 
-  constructor(signer: ISigner, address: HexString, abi: IAbi, evvmId: number) {
+  constructor(signer: ISigner, address: HexString, abi: IAbi) {
     super(signer);
     this.address = address;
     this.abi = abi;
-    this.evvmId = evvmId;
+    this.chainId = this.signer.chainId;
   }
 
   /**
@@ -28,6 +28,13 @@ export abstract class BaseService extends SignatureBuilder {
       contractAbi: this.abi,
       args: args || [],
     });
+  }
+
+  /**
+   * Retrieves the evvm ID of the service
+   */
+  async getEvvmID(): Promise<bigint> {
+    return this.view<bigint>("getEvvmID");
   }
 
   /**

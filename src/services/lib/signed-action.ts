@@ -10,7 +10,7 @@ export interface IBaseDataSchema {
 }
 
 export interface ISerializableSignedAction<T> {
-  evvmId: number;
+  chainId: number;
   functionName: string;
   functionAbi: IAbiItem;
   contractAddress: HexString;
@@ -18,6 +18,11 @@ export interface ISerializableSignedAction<T> {
   args: any[];
 }
 
+/**
+ * Signed EVVM action, result of a function call of a BaseService.
+ * Contains all information needed to execute the transaction anywhere.
+ * Can be serialized to JSON using JSON.stringify() or with SignedAction.toJSON()
+ */
 export class SignedAction<T extends IBaseDataSchema> {
   service: BaseService;
   functionName: string;
@@ -37,7 +42,7 @@ export class SignedAction<T extends IBaseDataSchema> {
     const serializedData = this.serializeData();
 
     return {
-      evvmId: this.service.evvmId,
+      chainId: this.service.chainId,
       functionName: this.functionName,
       functionAbi: this.functionAbi,
       contractAddress: this.service.address,
