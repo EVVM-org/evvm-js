@@ -13,6 +13,7 @@ export interface ISerializableSignedAction<T> {
   chainId: number;
   functionName: string;
   functionAbi: IAbiItem;
+  evvmId: string;
   contractAddress: HexString;
   data: T;
   args: any[];
@@ -25,13 +26,20 @@ export interface ISerializableSignedAction<T> {
  */
 export class SignedAction<T extends IBaseDataSchema> {
   service: BaseService;
+  evvmId: bigint;
   functionName: string;
   data: T;
   functionAbi: IAbiItem;
   args: any[];
 
-  constructor(service: BaseService, functionName: string, data: T) {
+  constructor(
+    service: BaseService,
+    evvmId: bigint,
+    functionName: string,
+    data: T,
+  ) {
     this.service = service;
+    this.evvmId = evvmId;
     this.functionName = functionName;
     this.data = data;
     this.functionAbi = this.getFunctionAbi();
@@ -43,6 +51,7 @@ export class SignedAction<T extends IBaseDataSchema> {
 
     return {
       chainId: this.service.chainId,
+      evvmId: this.evvmId.toString(),
       functionName: this.functionName,
       functionAbi: this.functionAbi,
       contractAddress: this.service.address,

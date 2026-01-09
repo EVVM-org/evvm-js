@@ -40,8 +40,7 @@ export class EVVM extends BaseService {
       `${priorityFlag ? "true" : "false"},` +
       `${executor && executor.toLowerCase()}`;
 
-
-	const evvmId = await this.getEvvmID()
+    const evvmId = await this.getEvvmID();
 
     const message = `${evvmId},pay,${inputs}`;
 
@@ -50,7 +49,7 @@ export class EVVM extends BaseService {
     const toAddress = to.startsWith("0x") ? (to as HexString) : undefined;
     const toIdentity = !to.startsWith("0x") ? to : undefined;
 
-    return new SignedAction(this, "pay", {
+    return new SignedAction(this, evvmId, "pay", {
       from: this.signer.address,
       to_address: toAddress,
       to_identity: toIdentity,
