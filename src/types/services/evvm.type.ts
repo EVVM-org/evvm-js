@@ -12,3 +12,19 @@ export interface IPayData {
   executor?: HexString;
   signature: string;
 }
+
+export interface IDispersePayData {
+  from: HexString;
+  toData: {
+    amount: bigint;
+    to_address: HexString;
+    to_identity: HexString;
+  }[];
+  token: HexString;
+  amount: bigint;
+  priorityFee?: bigint;
+  nonce: bigint;
+  priorityFlag: boolean;
+  executor: HexString;
+  signature: string;
+}
