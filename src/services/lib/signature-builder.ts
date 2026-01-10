@@ -1,4 +1,4 @@
-import type { ISigner } from "@/types/signer.type";
+import type { ISigner } from "@/types";
 
 export class SignatureBuilder {
   protected signer: ISigner;

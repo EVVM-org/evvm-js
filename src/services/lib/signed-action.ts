@@ -1,6 +1,5 @@
-import type { HexString } from "@/types/hexstring.type";
 import type { BaseService } from "./base-service";
-import type { IAbiItem } from "@/types/abi.type";
+import type { HexString, IAbiItem } from "@/types";
 
 export interface IBaseDataSchema {
   signature: string;

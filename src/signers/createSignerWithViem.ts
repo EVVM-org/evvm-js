@@ -1,7 +1,6 @@
 import { readContract } from "viem/actions";
 import type { WalletClient } from "viem";
-import type { ISigner } from "@/types/signer.type";
-import type { IAbi, IAbiFunction, IAbiParameter } from "@/types/abi.type";
+import type { IAbi, IAbiFunction, IAbiParameter, ISigner } from "@/types";
 
 export const createSignerWithViem = async (
   walletClient: WalletClient,
@@ -9,7 +8,7 @@ export const createSignerWithViem = async (
   const address = walletClient.account?.address;
   if (!address) throw new Error("No address connected");
 
-  const chainId = await walletClient.getChainId()
+  const chainId = await walletClient.getChainId();
 
   return {
     address,

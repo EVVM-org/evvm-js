@@ -1,6 +1,5 @@
 import { Contract, type Signer } from "ethers";
-import type { ISigner } from "@/types/signer.type";
-import type { HexString } from "@/types/hexstring.type";
+import type { HexString, ISigner } from "@/types";
 
 /**
  * Creates an evvm signer using ethersjs v6

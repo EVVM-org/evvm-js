@@ -1,5 +1,5 @@
 // EVVM Smart Contract ABIs
-import type { IAbi } from "@/types/abi.type";
+import type { IAbi } from "@/types";
 import EstimatorABIFile from "./Estimator.json";
 import EvvmABIFile from "./Evvm.json";
 import NameServiceABIFile from "./NameService.json";

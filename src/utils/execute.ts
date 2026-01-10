@@ -3,8 +3,7 @@ import {
   type IBaseDataSchema,
   type ISerializableSignedAction,
 } from "@/services/lib/signed-action";
-import type { HexString } from "@/types/hexstring.type";
-import type { ISigner } from "@/types/signer.type";
+import type { ISigner, HexString } from "@/types";
 
 /**
  * Executes the given SignedAction

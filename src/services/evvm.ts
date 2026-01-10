@@ -1,10 +1,8 @@
-import type { ISigner } from "@/types/signer.type";
-import { BaseService } from "./lib/base-service";
-import type { HexString } from "@/types/hexstring.type";
-import { EvvmABI } from "@/abi";
-import type { IDispersePayData, IPayData } from "@/types/services/evvm.type";
-import { SignedAction } from "./lib/signed-action";
 import { encodeAbiParameters, sha256 } from "viem";
+import type { ISigner, HexString, IDispersePayData, IPayData } from "@/types";
+import { BaseService } from "./lib";
+import { EvvmABI } from "@/abi";
+import { SignedAction } from "./lib";
 
 const abiDispersePayParameters = [
   {
