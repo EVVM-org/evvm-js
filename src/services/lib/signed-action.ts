@@ -92,13 +92,17 @@ export class SignedAction<T extends IBaseDataSchema> {
 
   private serializeData(): T {
     const deepSerialize = (value: any): any => {
+      // serialize bigints
       if (typeof value === "bigint") return value.toString();
+      // serialize arrays
       if (Array.isArray(value)) return value.map((v) => deepSerialize(v));
+      // serialize objects
       if (value && typeof value === "object") {
         return Object.fromEntries(
           Object.entries(value).map(([k, v]) => [k, deepSerialize(v)]),
         );
       }
+      // else, it's a serializable object (primitive)
       return value;
     };
 

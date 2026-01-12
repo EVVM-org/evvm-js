@@ -30,3 +30,19 @@ export interface ICancelOrderData {
   _priorityFlag_Evvm?: boolean;
   _signature_Evvm?: string;
 }
+
+export interface IDispatchOrderData {
+  user: HexString;
+  metadata: {
+    nonce: bigint;
+    tokenA: HexString;
+    tokenB: HexString;
+    orderId: bigint;
+    amountOfTokenBToFill: bigint;
+    signature: string;
+  };
+  _priorityFee_Evvm?: bigint;
+  _nonce_Evvm: bigint;
+  _priorityFlag_Evvm: boolean;
+  _signature_Evvm: string;
+}
