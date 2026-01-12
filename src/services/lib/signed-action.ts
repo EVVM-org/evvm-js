@@ -3,8 +3,6 @@ import type { HexString, IAbiItem } from "@/types";
 
 export interface IBaseDataSchema {
   signature: string;
-  from: HexString;
-  nonce: bigint | string;
   [key: string]: any;
 }
 
