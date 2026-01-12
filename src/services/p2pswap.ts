@@ -1,4 +1,10 @@
-import type { HexString, IMakeOrderData, IPayData, ISigner } from "@/types";
+import type {
+  HexString,
+  ICancelOrderData,
+  IMakeOrderData,
+  IPayData,
+  ISigner,
+} from "@/types";
 import { BaseService, SignedAction } from "./lib";
 import { P2PSwapABI } from "@/abi";
 
@@ -15,7 +21,6 @@ export class P2PSwap extends BaseService {
     amountB,
     evvmSignedAction,
   }: {
-    user: HexString;
     nonce: bigint;
     tokenA: HexString;
     tokenB: HexString;
@@ -50,6 +55,47 @@ export class P2PSwap extends BaseService {
       _nonce_Evvm: evvmSignedAction.data.nonce,
       _priorityFlag_Evvm: evvmSignedAction.data.priorityFlag,
       _signature_Evvm: evvmSignedAction.data.signature,
+    });
+  }
+
+  async cancelOrder({
+    nonce,
+    tokenA,
+    tokenB,
+    orderId,
+    evvmSignedAction,
+  }: {
+    nonce: bigint;
+    tokenA: HexString;
+    tokenB: HexString;
+    orderId: bigint;
+    evvmSignedAction?: SignedAction<IPayData>;
+  }): Promise<SignedAction<ICancelOrderData>> {
+    const evvmId = await this.getEvvmID();
+
+    const inputs: string =
+      `${nonce.toString()},` +
+      `${tokenA},` +
+      `${tokenB},` +
+      `${orderId.toString()}`;
+
+    const message = `${evvmId},cancelOrder,${inputs}`;
+
+    const signature = await this.signERC191Message(message);
+
+    return new SignedAction(this, evvmId, "cancelOrder", {
+      user: this.signer.address,
+      metadata: {
+        nonce,
+        tokenA,
+        tokenB,
+        orderId,
+        signature,
+      },
+      _priorityFee_Evvm: evvmSignedAction?.data.priorityFee,
+      _nonce_Evvm: evvmSignedAction?.data.nonce,
+      _priorityFlag_Evvm: evvmSignedAction?.data.priorityFlag,
+      _signature_Evvm: evvmSignedAction?.data.signature,
     });
   }
 }
