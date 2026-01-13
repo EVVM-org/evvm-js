@@ -23,6 +23,17 @@ export class P2PSwap extends BaseService {
     super(signer, address, P2PSwapABI);
   }
 
+  /**
+   * Create and sign a `makeOrder` action.
+   *
+   * @param {bigint} nonce - Order nonce
+   * @param {HexString} tokenA - Token A address
+   * @param {HexString} tokenB - Token B address
+   * @param {bigint} amountA - Amount of token A
+   * @param {bigint} amountB - Amount of token B
+   * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
+   * @returns {Promise<SignedAction<IMakeOrderData>>}
+   */
   async makeOrder({
     nonce,
     tokenA,
@@ -68,6 +79,16 @@ export class P2PSwap extends BaseService {
     });
   }
 
+  /**
+   * Create and sign a `cancelOrder` action.
+   *
+   * @param {bigint} nonce - Order nonce
+   * @param {HexString} tokenA - Token A address
+   * @param {HexString} tokenB - Token B address
+   * @param {bigint} orderId - Order identifier
+   * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
+   * @returns {Promise<SignedAction<ICancelOrderData>>}
+   */
   async cancelOrder({
     nonce,
     tokenA,
@@ -109,6 +130,17 @@ export class P2PSwap extends BaseService {
     });
   }
 
+  /**
+   * Create and sign a `dispatchOrder` action (proportional fee variant).
+   *
+   * @param {bigint} nonce
+   * @param {HexString} tokenA
+   * @param {HexString} tokenB
+   * @param {bigint} orderId
+   * @param {bigint} amountOfTokenBToFill
+   * @param {SignedAction<IPayData>} evvmSignedAction
+   * @returns {Promise<SignedAction<IDispatchOrderData>>}
+   */
   async dispatchOrder_fillPropotionalFee({
     nonce,
     tokenA,
@@ -153,6 +185,18 @@ export class P2PSwap extends BaseService {
     });
   }
 
+  /**
+   * Create and sign a `dispatchOrder` action (fixed fee variant).
+   *
+   * @param {bigint} nonce
+   * @param {HexString} tokenA
+   * @param {HexString} tokenB
+   * @param {bigint} orderId
+   * @param {bigint} amountOfTokenBToFill
+   * @param {bigint} maxFillFixedFee
+   * @param {SignedAction<IPayData>} evvmSignedAction
+   * @returns {Promise<SignedAction<IDispatchOrderFixedFeeData>>}
+   */
   async dispatchOrder_fillFixedFee({
     nonce,
     tokenA,

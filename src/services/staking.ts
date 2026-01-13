@@ -35,6 +35,16 @@ export class Staking extends BaseService {
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPresaleStakingData>> {
+    /**
+     * Create and sign a `presaleStaking` action.
+     *
+     * @param {HexString=} user - Optional user address (defaults to signer)
+     * @param {boolean} isStaking - Whether user is staking or unstaking
+     * @param {bigint=} amountOfStaking - Amount to stake (0 if not applicable)
+     * @param {bigint} nonce - Stake nonce
+     * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
+     * @returns {Promise<SignedAction<IPresaleStakingData>>}
+     */
     const evvmId = await this.getEvvmID();
 
     const inputs: string =
@@ -74,6 +84,16 @@ export class Staking extends BaseService {
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPublicStakingData>> {
+    /**
+     * Create and sign a `publicStaking` action.
+     *
+     * @param {HexString=} user
+     * @param {boolean} isStaking
+     * @param {bigint} amountOfStaking
+     * @param {bigint} nonce
+     * @param {SignedAction<IPayData>=} evvmSignedAction
+     * @returns {Promise<SignedAction<IPublicStakingData>>}
+     */
     const evvmId = await this.getEvvmID();
 
     const inputs: string =
@@ -109,10 +129,21 @@ export class Staking extends BaseService {
     amountOfStaking: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IGoldenStakingData>> {
+    /**
+     * Create a `goldenStaking` action used by the golden fisher.
+     *
+     * This helper packages the provided amount and optional EVVM signature
+     * into a `SignedAction`. Note: the golden staking flow expects the
+     * on-chain verification to use the EVVM signature provided in
+     * `evvmSignedAction`.
+     *
+     * @param {boolean} isStaking
+     * @param {bigint} amountOfStaking
+     * @param {SignedAction<IPayData>=} evvmSignedAction
+     * @returns {Promise<SignedAction<IGoldenStakingData>>}
+     */
     const evvmId = await this.getEvvmID();
 
-    // todo: review this
-    // goldenStaking does not use a user-signed ERC191 message for the staking action
     const userSignature = evvmSignedAction?.data.signature;
 
     return new SignedAction(this, evvmId, "goldenStaking", {

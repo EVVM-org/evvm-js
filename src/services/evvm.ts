@@ -25,7 +25,21 @@ export class EVVM extends BaseService {
   }
 
   /**
-   * Signature creation for evvm.pay()
+   * Create and sign a `pay` action.
+   *
+   * Builds the EIP-191 message for the `pay` entrypoint and signs it using
+   * the configured signer. The returned `SignedAction` contains all data
+   * required to execute the `pay` call on-chain (serialized args and
+   * signature).
+   *
+   * @param {HexString | string} to - Recipient address (0x...) or identity string
+   * @param {HexString} tokenAddress - Token contract address used for payment
+   * @param {bigint} amount - Amount to transfer
+   * @param {bigint} priorityFee - Priority fee to attach to the EVVM execution
+   * @param {bigint} nonce - EVVM nonce for this action
+   * @param {boolean} priorityFlag - Whether this action is prioritized
+   * @param {HexString=} executor - Optional executor address
+   * @returns {Promise<SignedAction<IPayData>>} Signed action ready for execution
    */
   async pay({
     to,
@@ -77,6 +91,21 @@ export class EVVM extends BaseService {
     });
   }
 
+  /**
+   * Build and sign a disperse payment action.
+   *
+   * The `toData` array is ABI-encoded and hashed for compact signing. The
+   * returned `SignedAction` contains the hashed payload and signature.
+   *
+   * @param {{amount: bigint; toAddress: HexString; toIdentity: HexString;}[]} toData - Recipients data
+   * @param {HexString} tokenAddress - Token address used for disperse
+   * @param {bigint} amount - Total amount
+   * @param {bigint} priorityFee - Priority fee
+   * @param {bigint} nonce - EVVM nonce
+   * @param {boolean} priorityFlag - Priority flag
+   * @param {HexString} executor - Executor address
+   * @returns {Promise<SignedAction<IDispersePayData>>} Signed disperse action
+   */
   async dispersePay({
     toData,
     tokenAddress,
