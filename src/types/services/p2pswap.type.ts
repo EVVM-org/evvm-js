@@ -46,3 +46,7 @@ export interface IDispatchOrderData {
   _priorityFlag_Evvm: boolean;
   _signature_Evvm: string;
 }
+
+export interface IDispatchOrderFixedFeeData extends IDispatchOrderData {
+  maxFillFixedFee: bigint;
+}

@@ -2,6 +2,7 @@ import type {
   HexString,
   ICancelOrderData,
   IDispatchOrderData,
+  IDispatchOrderFixedFeeData,
   IMakeOrderData,
   IPayData,
   ISigner,
@@ -137,6 +138,53 @@ export class P2PSwap extends BaseService {
         amountOfTokenBToFill: amountOfTokenBToFill,
         signature,
       },
+      _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
+      _nonce_Evvm: evvmSignedAction.data.nonce,
+      _priorityFlag_Evvm: evvmSignedAction.data.priorityFlag,
+      _signature_Evvm: evvmSignedAction.data.signature,
+    });
+  }
+
+  async dispatchOrder_fillFixedFee({
+    nonce,
+    tokenA,
+    tokenB,
+    orderId,
+    amountOfTokenBToFill,
+    maxFillFixedFee,
+    evvmSignedAction,
+  }: {
+    nonce: bigint;
+    tokenA: HexString;
+    tokenB: HexString;
+    orderId: bigint;
+    amountOfTokenBToFill: bigint;
+    maxFillFixedFee: bigint;
+    evvmSignedAction: SignedAction<IPayData>;
+  }): Promise<SignedAction<IDispatchOrderFixedFeeData>> {
+    const evvmId = await this.getEvvmID();
+
+    const inputs: string =
+      `${nonce.toString()},` +
+      `${tokenA},` +
+      `${tokenB},` +
+      `${orderId.toString()}`;
+
+    const message = `${evvmId},dispatchOrder,${inputs}`;
+
+    const signature = await this.signERC191Message(message);
+
+    return new SignedAction(this, evvmId, "dispatchOrder", {
+      user: this.signer.address,
+      metadata: {
+        nonce,
+        tokenA,
+        tokenB,
+        orderId,
+        amountOfTokenBToFill: amountOfTokenBToFill,
+        signature,
+      },
+      maxFillFixedFee,
       _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
       _nonce_Evvm: evvmSignedAction.data.nonce,
       _priorityFlag_Evvm: evvmSignedAction.data.priorityFlag,
