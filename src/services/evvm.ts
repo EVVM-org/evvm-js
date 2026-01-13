@@ -11,6 +11,14 @@ const abiDispersePayParameters = [
   },
 ];
 
+/**
+ * EVVM service wrapper.
+ *
+ * Provides helper methods to build signed EVVM actions related to payments
+ * and batch disperse payments. Each helper returns a `SignedAction` which
+ * contains the serialized data and signature necessary to execute the
+ * corresponding contract call.
+ */
 export class EVVM extends BaseService {
   constructor(signer: ISigner, address: HexString) {
     super(signer, address, EvvmABI);

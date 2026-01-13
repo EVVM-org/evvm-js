@@ -10,6 +10,14 @@ import type {
 import { BaseService, SignedAction } from "./lib";
 import { P2PSwapABI } from "@/abi";
 
+/**
+ * P2PSwap service wrapper.
+ *
+ * Implements signature creation helpers for peer-to-peer swap operations
+ * (makeOrder, cancelOrder, dispatchOrder variants). Each method returns a
+ * `SignedAction` containing the signed metadata and serialized args ready
+ * for on-chain execution.
+ */
 export class P2PSwap extends BaseService {
   constructor(signer: ISigner, address: HexString) {
     super(signer, address, P2PSwapABI);

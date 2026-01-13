@@ -16,6 +16,14 @@ import type {
 import { BaseService, SignedAction } from "./lib";
 import { NameServiceABI } from "@/abi";
 
+/**
+ * NameService service wrapper.
+ *
+ * Creates signed actions for NameService operations such as offers,
+ * username registration, metadata management and renewal. Each helper
+ * returns a `SignedAction` that bundles the required metadata and
+ * EIP-191 signature for execution.
+ */
 export class NameService extends BaseService {
   constructor(signer: ISigner, address: HexString) {
     super(signer, address, NameServiceABI);

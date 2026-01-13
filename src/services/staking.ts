@@ -9,6 +9,14 @@ import type {
 import { BaseService, SignedAction } from "./lib";
 import { StakingABI } from "@/abi";
 
+/**
+ * Staking service wrapper.
+ *
+ * Provides helpers to build signed staking-related actions (`presaleStaking`,
+ * `publicStaking`, `goldenStaking`). Each helper returns a `SignedAction`
+ * containing the serialized metadata and signature required for the
+ * corresponding contract call.
+ */
 export class Staking extends BaseService {
   constructor(signer: ISigner, address: HexString) {
     super(signer, address, StakingABI);
