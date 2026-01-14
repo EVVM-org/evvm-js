@@ -74,7 +74,7 @@ export class P2PSwap extends BaseService {
       signature,
       _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
       _nonce_Evvm: evvmSignedAction.data.nonce,
-      _priorityFlag_Evvm: evvmSignedAction.data.priorityFlag,
+      _priority_Evvm: evvmSignedAction.data.priorityFlag,
       _signature_Evvm: evvmSignedAction.data.signature,
     });
   }
@@ -125,7 +125,7 @@ export class P2PSwap extends BaseService {
       },
       _priorityFee_Evvm: evvmSignedAction?.data.priorityFee,
       _nonce_Evvm: evvmSignedAction?.data.nonce,
-      _priorityFlag_Evvm: evvmSignedAction?.data.priorityFlag,
+      _priority_Evvm: evvmSignedAction?.data.priorityFlag,
       _signature_Evvm: evvmSignedAction?.data.signature,
     });
   }
@@ -168,7 +168,7 @@ export class P2PSwap extends BaseService {
 
     const signature = await this.signERC191Message(message);
 
-    return new SignedAction(this, evvmId, "dispatchOrder", {
+    return new SignedAction(this, evvmId, "dispatchOrder_fillPropotionalFee", {
       user: this.signer.address,
       metadata: {
         nonce,
@@ -180,7 +180,7 @@ export class P2PSwap extends BaseService {
       },
       _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
       _nonce_Evvm: evvmSignedAction.data.nonce,
-      _priorityFlag_Evvm: evvmSignedAction.data.priorityFlag,
+      _priority_Evvm: evvmSignedAction.data.priorityFlag,
       _signature_Evvm: evvmSignedAction.data.signature,
     });
   }
@@ -226,7 +226,7 @@ export class P2PSwap extends BaseService {
 
     const signature = await this.signERC191Message(message);
 
-    return new SignedAction(this, evvmId, "dispatchOrder", {
+    return new SignedAction(this, evvmId, "dispatchOrder_fillFixedFee", {
       user: this.signer.address,
       metadata: {
         nonce,
@@ -239,7 +239,7 @@ export class P2PSwap extends BaseService {
       maxFillFixedFee,
       _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
       _nonce_Evvm: evvmSignedAction.data.nonce,
-      _priorityFlag_Evvm: evvmSignedAction.data.priorityFlag,
+      _priority_Evvm: evvmSignedAction.data.priorityFlag,
       _signature_Evvm: evvmSignedAction.data.signature,
     });
   }

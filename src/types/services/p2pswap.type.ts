@@ -12,7 +12,7 @@ export interface IMakeOrderData {
   signature: string;
   _priorityFee_Evvm?: bigint;
   _nonce_Evvm: bigint;
-  _priorityFlag_Evvm: boolean;
+  _priority_Evvm: boolean;
   _signature_Evvm: string;
 }
 
@@ -27,7 +27,7 @@ export interface ICancelOrderData {
   };
   _priorityFee_Evvm?: bigint;
   _nonce_Evvm?: bigint;
-  _priorityFlag_Evvm?: boolean;
+  _priority_Evvm?: boolean;
   _signature_Evvm?: string;
 }
 
@@ -43,7 +43,7 @@ export interface IDispatchOrderData {
   };
   _priorityFee_Evvm?: bigint;
   _nonce_Evvm: bigint;
-  _priorityFlag_Evvm: boolean;
+  _priority_Evvm: boolean;
   _signature_Evvm: string;
 }
 
