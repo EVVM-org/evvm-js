@@ -132,7 +132,7 @@ export class EVVM extends BaseService {
     const hashedToData = sha256(
       encodeAbiParameters(
         abiDispersePayParameters,
-        toData.map((item) => [item.amount, item.toAddress, item.toIdentity]),
+        [toData.map((item) => [item.amount, item.toAddress, item.toIdentity])],
       ),
     );
 
