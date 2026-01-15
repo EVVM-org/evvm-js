@@ -1,8 +1,9 @@
 import { describe, it, expect } from "bun:test";
 import { EVVM } from "../src/services/evvm";
+import type { HexString } from "@/types";
 
 class FakeSigner {
-  address = "0x2222222222222222222222222222222222222222";
+  address = "0x2222222222222222222222222222222222222222" as HexString;
   chainId = 1;
   async signMessage(message: string) {
     return `signed(${message})`;
