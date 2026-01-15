@@ -20,6 +20,9 @@ export const createSignerWithEthers = async (
     async signMessage(message) {
       return signer.signMessage(message);
     },
+    async signGenericEvvmMessage(evvmId, functionName, inputs) {
+      return signer.signMessage(`${evvmId},${functionName},${inputs}`);
+    },
     async writeContract({ contractAbi, contractAddress, args, functionName }) {
       const contract = new Contract(contractAddress, contractAbi, signer);
 

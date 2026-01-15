@@ -27,6 +27,14 @@ export interface ISigner {
    */
   signMessage(message: string): Promise<string>; // signature
   /**
+   * Signs a generic EVVM message using the standard pattern.
+   */
+  signGenericEvvmMessage(
+    evvmId: bigint,
+    functionName: string,
+    inputs: string,
+  ): Promise<string>;
+  /**
    * Signs and sends a transaction to the network
    * @returns tx hash
    */

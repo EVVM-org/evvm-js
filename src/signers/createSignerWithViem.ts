@@ -19,6 +19,12 @@ export const createSignerWithViem = async (
         message,
       });
     },
+    async signGenericEvvmMessage(evvmId, functionName, inputs) {
+      return walletClient.signMessage({
+        account: address,
+        message: `${evvmId},${functionName},${inputs}`,
+      });
+    },
     async writeContract({ contractAbi, contractAddress, args, functionName }) {
       return walletClient.writeContract({
         abi: contractAbi,

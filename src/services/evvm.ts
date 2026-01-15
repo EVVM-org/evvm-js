@@ -130,10 +130,9 @@ export class EVVM extends BaseService {
     const evvmId = await this.getEvvmID();
 
     const hashedToData = sha256(
-      encodeAbiParameters(
-        abiDispersePayParameters,
-        [toData.map((item) => [item.amount, item.toAddress, item.toIdentity])],
-      ),
+      encodeAbiParameters(abiDispersePayParameters, [
+        toData.map((item) => [item.amount, item.toAddress, item.toIdentity]),
+      ]),
     );
 
     const inputs: string =
