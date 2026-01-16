@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { EVVM } from "../src/services/evvm";
 import type { HexString } from "@/types";
+import { EVVM } from "@/services";
 
 class FakeSigner {
   address = "0x2222222222222222222222222222222222222222" as HexString;

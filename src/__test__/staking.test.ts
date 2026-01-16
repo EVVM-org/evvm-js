@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "bun:test";
-import { Staking } from "../src/services/staking";
+import { Staking } from "@/services";
 
 class FakeSigner {
   address = "0x3333333333333333333333333333333333333333";

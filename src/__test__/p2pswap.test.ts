@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'bun:test'
-import { P2PSwap } from '../src/services/p2pswap'
+import { P2PSwap } from '@/services'
 
 class FakeSigner {
   address = '0x1111111111111111111111111111111111111111'
