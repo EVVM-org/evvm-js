@@ -3,7 +3,7 @@ name: Publish to npm and Create Release
 permissions:
   contents: write
   packages: write
-  id-token: write  # Required for OIDC trusted publishing
+  id-token: write # Required for OIDC trusted publishing
 
 on:
   push:
@@ -26,6 +26,13 @@ jobs:
       - name: Use Bun
         uses: oven-sh/setup-bun@v1
 
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org/"
+          # OIDC trusted publishing - no need for NODE_AUTH_TOKEN
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
@@ -42,7 +49,7 @@ jobs:
         run: |
           # Get the last tag
           last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          
+
           if [ -z "$last_tag" ]; then
             # If no tags exist, get all commits
             changes=$(git log --oneline --pretty=format:"- %s" HEAD)
@@ -50,7 +57,7 @@ jobs:
             # Get commits since last tag
             changes=$(git log --oneline --pretty=format:"- %s" ${last_tag}..HEAD)
           fi
-          
+
           # Save changes to output, handling multiline
           echo "changes<<EOF" >> $GITHUB_OUTPUT
           echo "$changes" >> $GITHUB_OUTPUT
@@ -61,13 +68,13 @@ jobs:
         run: |
           # Get commit messages since last tag
           last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          
+
           if [ -z "$last_tag" ]; then
             commits=$(git log --oneline --pretty=format:"%s" HEAD)
           else
             commits=$(git log --oneline --pretty=format:"%s" ${last_tag}..HEAD)
           fi
-          
+
           # Check for MAJOR: prefix
           if echo "$commits" | grep -q "^MAJOR:"; then
             echo "bump_type=major" >> $GITHUB_OUTPUT
@@ -83,7 +90,7 @@ jobs:
         id: version
         run: |
           # Bump version based on commit type
-          new_version=$(bun pm version ${{ steps.bump-type.outputs.bump_type }} --no-git-tag-version)
+          new_version=$(npm version ${{ steps.bump-type.outputs.bump_type }} --no-git-tag-version)
           echo "version=${new_version}" >> $GITHUB_OUTPUT
 
       - name: Commit version change
@@ -93,7 +100,7 @@ jobs:
           git push origin main
 
       - name: Publish to npm
-        run: bun publish --access public
+        run: npm publish --access public
         # Using OIDC trusted publishing - no NODE_AUTH_TOKEN needed
         # The --provenance flag adds automatic attestation for better security
 
@@ -110,9 +117,9 @@ jobs:
           name: "Release ${{ steps.version.outputs.version }}"
           body: |
             Auto-generated release for version ${{ steps.version.outputs.version }}
-            
+
             ## Changes:
-            
+
             ${{ steps.changes.outputs.changes }}
           draft: false
           prerelease: false
