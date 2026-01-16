@@ -83,7 +83,7 @@ jobs:
         id: version
         run: |
           # Bump version based on commit type
-          new_version=$(bun pm version ${{ steps.bump-type.outputs.bump_type }})
+          new_version=$(bun pm version ${{ steps.bump-type.outputs.bump_type }} --no-git-tag-version)
           echo "version=${new_version}" >> $GITHUB_OUTPUT
 
       - name: Commit version change
