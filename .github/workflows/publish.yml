@@ -23,18 +23,14 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org/'
-          # OIDC trusted publishing - no need for NODE_AUTH_TOKEN
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Build package
-        run: npm run build
+        run: bun run build
 
       - name: Configure git
         run: |
@@ -87,7 +83,7 @@ jobs:
         id: version
         run: |
           # Bump version based on commit type
-          new_version=$(npm version ${{ steps.bump-type.outputs.bump_type }} --no-git-tag-version)
+          new_version=$(bun version ${{ steps.bump-type.outputs.bump_type }} --no-git-tag)
           echo "version=${new_version}" >> $GITHUB_OUTPUT
 
       - name: Commit version change
@@ -97,7 +93,7 @@ jobs:
           git push origin main
 
       - name: Publish to npm
-        run: npm publish --access public --provenance
+        run: bun publish --access public
         # Using OIDC trusted publishing - no NODE_AUTH_TOKEN needed
         # The --provenance flag adds automatic attestation for better security
 
