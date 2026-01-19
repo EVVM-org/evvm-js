@@ -21,7 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/EVVM-org/evvm-js.git"
   },
-  "license": "Apache-2.0",
+  "license": "EVVM-NONCOMMERCIAL-1.0",
   "bugs": {
     "url": "https://github.com/EVVM-org/evvm-js/issues"
   },
