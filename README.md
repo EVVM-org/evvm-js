@@ -1,6 +1,6 @@
 # EVVM JS
 
-[![npm version](https://badge.fury.io/js/%40evvm%2Fevvm-js.svg)](https://badge.fury.io/js/%40evvm%2Fevvm-js)
+[![npm version](https://badge.fury.io/js/%40evvm%2Fevvm-js.svg)](https://www.npmjs.com/package/@evvm/evvm-js)
 [![License: EVVM-NONCOMMERCIAL-1.0](https://img.shields.io/badge/Licence-EVVM--NONCOMMERCIAL--1.0-blue.svg)](https://evvm.org/licenses/EVVM-NONCOMMERCIAL-1.0)
 
 EVVM JS is a powerful JavaScript/TypeScript library for seamless interaction with the EVVM. It simplifies common tasks such as payments, identity management, staking, and peer-to-peer swaps. Built with first-class TypeScript support, it offers a streamlined developer experience with robust type safety.
@@ -129,6 +129,3 @@ bun run build
 
 Contributions are welcome! Please open an issue or submit a pull request on our [GitHub repository](https://github.com/EVVM-org/evvm-js).
 
-## License
-
-EVVM JS is licensed under the [Apache-2.0 License](LICENSE).
