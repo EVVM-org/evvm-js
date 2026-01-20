@@ -22,6 +22,19 @@
     "url": "git+https://github.com/EVVM-org/evvm-js.git"
   },
   "license": "EVVM-NONCOMMERCIAL-1.0",
+  "keywords": [
+    "evvm",
+    "blockchain",
+    "ethereum",
+    "web3",
+    "sdk",
+    "typescript",
+    "ethers",
+    "viem",
+    "eip-191",
+    "crypto",
+    "defi"
+  ],
   "bugs": {
     "url": "https://github.com/EVVM-org/evvm-js/issues"
   },
