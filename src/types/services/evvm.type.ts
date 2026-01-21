@@ -17,8 +17,8 @@ export interface IDispersePayData {
   from: HexString;
   toData: {
     amount: bigint;
-    to_address: HexString;
-    to_identity: HexString;
+    to_address: string | HexString;
+    to_identity: string;
   }[];
   token: HexString;
   amount: bigint;

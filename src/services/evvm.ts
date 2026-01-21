@@ -11,6 +11,18 @@ const abiDispersePayParameters = [
   },
 ];
 
+type ToData =
+  | {
+      amount: bigint;
+      toAddress: HexString;
+      toIdentity: undefined;
+    }
+  | {
+      amount: bigint;
+      toAddress: undefined;
+      toIdentity: string;
+    };
+
 /**
  * EVVM service wrapper.
  *
@@ -115,11 +127,7 @@ export class EVVM extends BaseService {
     priorityFlag,
     executor,
   }: {
-    toData: {
-      amount: bigint;
-      toAddress: HexString;
-      toIdentity: HexString;
-    }[];
+    toData: ToData[];
     tokenAddress: HexString;
     amount: bigint;
     priorityFee: bigint;
@@ -131,7 +139,18 @@ export class EVVM extends BaseService {
 
     const hashedToData = sha256(
       encodeAbiParameters(abiDispersePayParameters, [
-        toData.map((item) => [item.amount, item.toAddress, item.toIdentity]),
+        toData.map((item) => {
+          if (item.toAddress && item.toIdentity)
+            throw new Error(
+              "Error, cannot provide both toAddress and toIdentity",
+            );
+
+          return [
+            item.amount,
+            item.toAddress ? item.toAddress : "",
+            item.toIdentity ? item.toIdentity : "",
+          ];
+        }),
       ]),
     );
 
@@ -151,8 +170,8 @@ export class EVVM extends BaseService {
       from: this.signer.address,
       toData: toData.map(({ amount, toAddress, toIdentity }) => ({
         amount,
-        to_identity: toIdentity,
-        to_address: toAddress,
+        to_identity: toIdentity ? toIdentity : "",
+        to_address: toAddress ? toAddress : "",
       })),
       token: tokenAddress,
       amount,
