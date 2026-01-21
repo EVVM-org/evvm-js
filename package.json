@@ -1,7 +1,7 @@
 {
   "name": "@evvm/evvm-js",
   "type": "module",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "main": "dist/index.cjs",
   "module": "dist/index.ts",
   "types": "dist/types/index.d.ts",
