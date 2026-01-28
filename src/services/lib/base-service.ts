@@ -1,16 +1,29 @@
 import type { HexString, ISigner, IAbi } from "@/types";
 import { SignatureBuilder } from "./signature-builder";
 
+interface IBaseServiceOpts {
+  evvmId?: bigint;
+}
+
 export abstract class BaseService extends SignatureBuilder {
   address: HexString;
   abi: IAbi;
   chainId: number;
+  protected evvmId?: bigint;
 
-  constructor(signer: ISigner, address: HexString, abi: IAbi) {
+  constructor(
+    signer: ISigner,
+    address: HexString,
+    abi: IAbi,
+    opts?: IBaseServiceOpts,
+  ) {
     super(signer);
     this.address = address;
     this.abi = abi;
     this.chainId = this.signer.chainId;
+
+    // optional fields
+    this.evvmId = opts?.evvmId;
   }
 
   /**
@@ -32,7 +45,8 @@ export abstract class BaseService extends SignatureBuilder {
    * Retrieves the evvm ID of the service
    */
   async getEvvmID(): Promise<bigint> {
-    return this.view<bigint>("getEvvmID");
+    const evvmId = this.evvmId || (await this.view<bigint>("getEvvmID"));
+    return evvmId;
   }
 
   /**

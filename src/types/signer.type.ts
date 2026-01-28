@@ -5,6 +5,7 @@ interface ISendTransactionParams {
   contractAddress: HexString;
   contractAbi: IAbi;
   functionName: string;
+  gas?: number;
   args: any[];
 }
 

@@ -25,13 +25,20 @@ export const createSignerWithViem = async (
         message: `${evvmId},${functionName},${inputs}`,
       });
     },
-    async writeContract({ contractAbi, contractAddress, args, functionName }) {
+    async writeContract({
+      contractAbi,
+      contractAddress,
+      args,
+      functionName,
+      gas,
+    }) {
       return walletClient.writeContract({
         abi: contractAbi,
         address: contractAddress,
         chain: walletClient.chain,
         account: address,
         functionName,
+        gas: gas ? BigInt(gas) : undefined,
         args: formatArgs(args, contractAbi, functionName),
       });
     },

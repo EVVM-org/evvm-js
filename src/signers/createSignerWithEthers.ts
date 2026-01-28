@@ -23,7 +23,13 @@ export const createSignerWithEthers = async (
     async signGenericEvvmMessage(evvmId, functionName, inputs) {
       return signer.signMessage(`${evvmId},${functionName},${inputs}`);
     },
-    async writeContract({ contractAbi, contractAddress, args, functionName }) {
+    async writeContract({
+      contractAbi,
+      contractAddress,
+      args,
+      functionName,
+      gas,
+    }) {
       const contract = new Contract(contractAddress, contractAbi, signer);
 
       if (!contract[functionName]) {
@@ -32,7 +38,9 @@ export const createSignerWithEthers = async (
         );
       }
 
-      const tx = await contract[functionName](...args);
+      const txOverrides = gas ? { gasLimit: gas } : {};
+
+      const tx = await contract[functionName](...args, txOverrides);
       await tx.wait();
 
       return tx.hash;
