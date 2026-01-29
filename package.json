@@ -12,6 +12,9 @@
       "types": "./dist/types/index.d.ts"
     }
   },
+  "browser": {
+    "node:crypto": "crypto-browserify"
+  },
   "files": [
     "dist/**/*.cjs",
     "dist/**/*.d.ts",
@@ -54,6 +57,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "crypto-browserify": "^3.12.1",
     "ethers": "^6.16.0",
     "viem": "^2.41.2"
   }
