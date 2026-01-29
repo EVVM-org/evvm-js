@@ -46,15 +46,17 @@
   "homepage": "https://github.com/EVVM-org/evvm-js#readme",
   "scripts": {
     "test": "bun test",
-    "build": "bun run build:types && bun run build:cjs && bun run build:esm && bun run build:browser",
+    "clean": "rm -rf dist",
+    "build": "bun run clean && bun run build:types && bun run build:cjs && bun run build:esm && bun run build:browser",
     "build:cjs": "bun build src/index.ts --minify --target=node --outfile=dist/index.cjs --format=cjs",
     "build:esm": "bun build src/index.ts --minify --target=node --outfile=dist/index.mjs --format=esm",
     "build:browser": "bun build src/index.ts --minify --target=browser --outfile=dist/index.browser.mjs --format=esm",
-    "build:types": "tsc",
+    "build:types": "tsc --project tsconfig.types.json && tsc-alias",
     "prepublishOnly": "bun run build"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "tsc-alias": "^1.8.16"
   },
   "peerDependencies": {
     "typescript": "^5"

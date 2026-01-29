@@ -60,7 +60,7 @@ const functionAbi = {
   type: "function",
 };
 
-import type { IBaseServiceProps } from "@/types/services";
+import type { IBaseServiceProps } from "@/types";
 
 class MockService extends BaseService {
   constructor(props: IBaseServiceProps) {
@@ -150,4 +150,3 @@ describe("execute", () => {
     expect(signer._chainId).toBe(2);
   });
 });
-

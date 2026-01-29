@@ -1,6 +1,5 @@
-import type { HexString, IAbi } from "@/types";
+import type { HexString, IAbi, IBaseServiceProps } from "@/types";
 import { SignatureBuilder } from "./signature-builder";
-import type { IBaseServiceProps } from "@/types/services/base-service.type";
 import type { IBaseDataSchema, SignedAction } from "./signed-action";
 
 export abstract class BaseService extends SignatureBuilder {

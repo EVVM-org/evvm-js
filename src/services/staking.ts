@@ -1,14 +1,13 @@
 import type {
   HexString,
-  ISigner,
   IPayData,
   IPresaleStakingData,
   IPublicStakingData,
   IGoldenStakingData,
+  IBaseServiceProps,
 } from "@/types";
 import { BaseService, SignedAction, SignMethod } from "./lib";
 import { StakingABI } from "@/abi";
-import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 /**
  * Staking service wrapper.

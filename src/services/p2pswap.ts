@@ -5,11 +5,10 @@ import type {
   IDispatchOrderFixedFeeData,
   IMakeOrderData,
   IPayData,
-  ISigner,
+  IBaseServiceProps,
 } from "@/types";
 import { BaseService, SignedAction, SignMethod } from "./lib";
 import { P2PSwapABI } from "@/abi";
-import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 /**
  * P2PSwap service wrapper.
@@ -35,7 +34,7 @@ export class P2PSwap extends BaseService {
    * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
    * @returns {Promise<SignedAction<IMakeOrderData>>}
    */
-   @SignMethod
+  @SignMethod
   async makeOrder({
     nonce,
     tokenA,
@@ -91,7 +90,7 @@ export class P2PSwap extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
    * @returns {Promise<SignedAction<ICancelOrderData>>}
    */
-   @SignMethod
+  @SignMethod
   async cancelOrder({
     nonce,
     tokenA,
@@ -144,7 +143,7 @@ export class P2PSwap extends BaseService {
    * @param {SignedAction<IPayData>} evvmSignedAction
    * @returns {Promise<SignedAction<IDispatchOrderData>>}
    */
-   @SignMethod
+  @SignMethod
   async dispatchOrder_fillPropotionalFee({
     nonce,
     tokenA,
@@ -201,7 +200,7 @@ export class P2PSwap extends BaseService {
    * @param {SignedAction<IPayData>} evvmSignedAction
    * @returns {Promise<SignedAction<IDispatchOrderFixedFeeData>>}
    */
-   @SignMethod
+  @SignMethod
   async dispatchOrder_fillFixedFee({
     nonce,
     tokenA,

@@ -1,4 +1,4 @@
-import type { HexString } from "../hexstring.type";
+import type { HexString } from "./hexstring.type";
 
 export interface IMakeOrderData {
   user: HexString;

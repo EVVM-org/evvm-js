@@ -1,6 +1,6 @@
-import type { IAbi } from "../abi.type";
-import type { HexString } from "../hexstring.type";
-import type { ISigner } from "../signer.type";
+import type { IAbi } from "./abi.type";
+import type { HexString } from "./hexstring.type";
+import type { ISigner } from "./signer.type";
 
 export interface IBaseServiceProps {
   signer: ISigner;

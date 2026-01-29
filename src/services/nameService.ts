@@ -1,6 +1,5 @@
 import type {
   HexString,
-  ISigner,
   IPayData,
   IAcceptOfferData,
   IAddCustomMetadataData,
@@ -12,10 +11,10 @@ import type {
   IRemoveCustomMetadataData,
   IRenewUsernameData,
   IWithdrawOfferData,
+  IBaseServiceProps,
 } from "@/types";
 import { BaseService, SignedAction, SignMethod } from "./lib";
 import { NameServiceABI } from "@/abi";
-import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 /**
  * NameService service wrapper.

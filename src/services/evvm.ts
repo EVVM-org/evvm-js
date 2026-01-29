@@ -1,9 +1,13 @@
 import { encodeAbiParameters, sha256 } from "viem";
-import type { HexString, IDispersePayData, IPayData } from "@/types";
+import type {
+  HexString,
+  IBaseServiceProps,
+  IDispersePayData,
+  IPayData,
+} from "@/types";
 import { BaseService, SignMethod } from "./lib";
 import { EvvmABI } from "@/abi";
 import { SignedAction } from "./lib";
-import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 const abiDispersePayParameters = [
   {
