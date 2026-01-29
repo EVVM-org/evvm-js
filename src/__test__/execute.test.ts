@@ -9,7 +9,16 @@ let writeContractSpy: any;
 //@ts-ignore
 class FakeSigner implements ISigner {
   address = "0x2222222222222222222222222222222222222222" as HexString;
-  chainId = 1;
+  _chainId = 1;
+
+  getChainId(): Promise<number> {
+    return Promise.resolve(this._chainId);
+  }
+
+  switchChain(chainId: number): Promise<void> {
+    this._chainId = chainId;
+    return Promise.resolve();
+  }
 
   async signMessage(message: string): Promise<string> {
     return `signed(${message})`;
@@ -51,9 +60,11 @@ const functionAbi = {
   type: "function",
 };
 
+import type { IBaseServiceProps } from "@/types/services";
+
 class MockService extends BaseService {
-  constructor(signer: ISigner, address: HexString, abi: IAbi) {
-    super(signer, address, abi);
+  constructor(props: IBaseServiceProps) {
+    super(props);
   }
 }
 
@@ -64,18 +75,19 @@ describe("execute", () => {
       mod.spyOn(signer, "writeContract"),
     );
 
-    const service = new MockService(
+    const service = new MockService({
       signer,
-      "0x1111111111111111111111111111111111111111",
-      [functionAbi] as any,
-    );
+      address: "0x1111111111111111111111111111111111111111",
+      abi: [functionAbi] as any,
+      chainId: 1,
+    });
 
     const signedAction = new SignedAction(service, 1n, "transfer", {
       to: "0x2222222222222222222222222222222222222222",
       amount: 100n,
     });
 
-    await execute(signer, signedAction);
+    await execute(signer, signedAction, {});
 
     expect(spy).toHaveBeenCalledWith({
       contractAbi: [functionAbi],
@@ -91,11 +103,12 @@ describe("execute", () => {
       mod.spyOn(signer, "writeContract"),
     );
 
-    const service = new MockService(
+    const service = new MockService({
       signer,
-      "0x1111111111111111111111111111111111111111",
-      [functionAbi] as any,
-    );
+      address: "0x1111111111111111111111111111111111111111",
+      abi: [functionAbi] as any,
+      chainId: 1,
+    });
 
     const signedAction = new SignedAction(service, 1n, "transfer", {
       to: "0x2222222222222222222222222222222222222222",
@@ -103,7 +116,7 @@ describe("execute", () => {
     });
 
     const serializedAction = signedAction.toJSON();
-    await execute(signer, serializedAction);
+    await execute(signer, serializedAction, {});
 
     expect(spy).toHaveBeenCalledWith({
       contractAbi: [functionAbi],
@@ -112,4 +125,29 @@ describe("execute", () => {
       functionName: "transfer",
     });
   });
+
+  it("should switch chain if signer is on a different chain", async () => {
+    const signer = new FakeSigner();
+    const spy = await import("bun:test").then((mod) =>
+      mod.spyOn(signer, "switchChain"),
+    );
+
+    const service = new MockService({
+      signer,
+      address: "0x1111111111111111111111111111111111111111",
+      abi: [functionAbi] as any,
+      chainId: 2,
+    });
+
+    const signedAction = new SignedAction(service, 1n, "transfer", {
+      to: "0x2222222222222222222222222222222222222222",
+      amount: 100n,
+    });
+
+    await execute(signer, signedAction, {});
+
+    expect(spy).toHaveBeenCalledWith(2);
+    expect(signer._chainId).toBe(2);
+  });
 });
+

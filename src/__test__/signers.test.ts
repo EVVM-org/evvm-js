@@ -52,7 +52,7 @@ describe("Signers", () => {
     test("should create a signer and expose address and chainId", async () => {
       const signer = await createSignerWithEthers(mockEthersSigner);
       expect(signer.address).toBe("0x1234567890123456789012345678901234567890");
-      expect(signer.chainId).toBe(1);
+      expect(await signer.getChainId()).toBe(1);
     });
 
     test("should sign a message", async () => {
@@ -98,7 +98,7 @@ describe("Signers", () => {
     test("should create a signer and expose address and chainId", async () => {
       const signer = await createSignerWithViem(mockViemWalletClient);
       expect(signer.address).toBe("0x1234567890123456789012345678901234567890");
-      expect(signer.chainId).toBe(1);
+      expect(await signer.getChainId()).toBe(1);
     });
 
     test("should sign a message", async () => {

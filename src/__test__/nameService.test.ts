@@ -1,15 +1,43 @@
 import { NameService } from "@/services";
 import { describe, it, expect, beforeEach } from "bun:test";
+import type { HexString, ISigner } from "@/types";
 
-class FakeSigner {
-  address = "0x2222222222222222222222222222222222222222";
-  chainId = 1;
+class FakeSigner implements ISigner {
+  address = "0x2222222222222222222222222222222222222222" as HexString;
+  _chainId = 1;
+
+  getChainId(): Promise<number> {
+    return Promise.resolve(this._chainId);
+  }
+
+  switchChain(chainId: number): Promise<void> {
+    this._chainId = chainId;
+    return Promise.resolve();
+  }
+
   async signMessage(message: string) {
     return `signed(${message})`;
   }
-  async readContract({ abi, address, functionName }: any) {
+
+  async readContract({
+    abi,
+    address,
+    functionName,
+  }: any): Promise<any> {
     if (functionName === "getEvvmID") return 777n;
     return null;
+  }
+
+  writeContract(args: any): Promise<HexString> {
+    return Promise.resolve("0xdeadbeef" as HexString);
+  }
+
+  signGenericEvvmMessage(
+    evvmId: bigint,
+    functionName: string,
+    inputs: string,
+  ): Promise<string> {
+    return Promise.resolve(`signed(${evvmId},${functionName},${inputs})`);
   }
 }
 
@@ -18,7 +46,11 @@ let svc: NameService;
 
 beforeEach(() => {
   signer = new FakeSigner();
-  svc = new NameService(signer, "0xNAMESERVICEADDRESS0000000000000000000");
+  svc = new NameService({
+    signer,
+    address: "0xNAMESERVICEADDRESS0000000000000000000",
+    chainId: 1,
+  });
 });
 
 describe("NameService service", () => {

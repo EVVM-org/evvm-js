@@ -1,15 +1,43 @@
 import { describe, it, expect, beforeEach } from 'bun:test'
 import { P2PSwap } from '@/services'
+import type { HexString, ISigner } from "@/types";
 
-class FakeSigner {
-  address = '0x1111111111111111111111111111111111111111'
-  chainId = 1
-  async signMessage(message: string) {
-    return `signed(${message})`
+class FakeSigner implements ISigner {
+  address = '0x1111111111111111111111111111111111111111' as HexString
+  _chainId = 1;
+
+  getChainId(): Promise<number> {
+    return Promise.resolve(this._chainId);
   }
-  async readContract({ abi, address, functionName }: any) {
-    if (functionName === 'getEvvmID') return 777n
-    return null
+
+  switchChain(chainId: number): Promise<void> {
+    this._chainId = chainId;
+    return Promise.resolve();
+  }
+
+  async signMessage(message: string) {
+    return `signed(${message})`;
+  }
+
+  async readContract({
+    abi,
+    address,
+    functionName,
+  }: any): Promise<any> {
+    if (functionName === "getEvvmID") return 777n;
+    return null;
+  }
+
+  writeContract(args: any): Promise<HexString> {
+    return Promise.resolve("0xdeadbeef" as HexString);
+  }
+
+  signGenericEvvmMessage(
+    evvmId: bigint,
+    functionName: string,
+    inputs: string,
+  ): Promise<string> {
+    return Promise.resolve(`signed(${evvmId},${functionName},${inputs})`);
   }
 }
 
@@ -18,7 +46,11 @@ let svc: P2PSwap
 
 beforeEach(() => {
   signer = new FakeSigner()
-  svc = new P2PSwap(signer, '0xP2PSWAPADDRESS000000000000000000000000')
+  svc = new P2PSwap({
+    signer,
+    address: '0xP2PSWAPADDRESS000000000000000000000000',
+    chainId: 1,
+  })
 })
 
 describe('P2PSwap service', () => {

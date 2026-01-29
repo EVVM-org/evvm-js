@@ -15,7 +15,7 @@ interface IExecuteOptions {
 export const execute = async <T extends IBaseDataSchema>(
   signer: ISigner,
   action: SignedAction<T> | ISerializableSignedAction<T>,
-  opts: IExecuteOptions,
+  opts?: IExecuteOptions,
 ): Promise<HexString> => {
   const serializedAction =
     action instanceof SignedAction ? action.toJSON() : action;
@@ -31,6 +31,6 @@ export const execute = async <T extends IBaseDataSchema>(
     contractAddress: serializedAction.contractAddress,
     args: serializedAction.args,
     functionName: serializedAction.functionName,
-    gas: opts.gas,
+    gas: opts?.gas,
   });
 };
