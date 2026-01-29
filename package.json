@@ -3,16 +3,18 @@
   "type": "module",
   "version": "0.1.14",
   "main": "dist/index.cjs",
-  "module": "dist/index.ts",
+  "module": "dist/index.mjs",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
+      "browser": "./dist/index.browser.mjs",
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs",
       "types": "./dist/types/index.d.ts"
     }
   },
   "browser": {
+    "./dist/index.mjs": "./dist/index.browser.mjs",
     "node:crypto": "crypto-browserify"
   },
   "files": [
@@ -44,9 +46,10 @@
   "homepage": "https://github.com/EVVM-org/evvm-js#readme",
   "scripts": {
     "test": "bun test",
-    "build": "bun run build:types && bun run build:cjs && bun run build:esm",
+    "build": "bun run build:types && bun run build:cjs && bun run build:esm && bun run build:browser",
     "build:cjs": "bun build src/index.ts --minify --target=node --outfile=dist/index.cjs --format=cjs",
     "build:esm": "bun build src/index.ts --minify --target=node --outfile=dist/index.mjs --format=esm",
+    "build:browser": "bun build src/index.ts --minify --target=browser --outfile=dist/index.browser.mjs --format=esm",
     "build:types": "tsc",
     "prepublishOnly": "bun run build"
   },
@@ -59,6 +62,6 @@
   "dependencies": {
     "crypto-browserify": "^3.12.1",
     "ethers": "^6.16.0",
-    "viem": "^2.41.2"
+    "viem": "2.45.0"
   }
 }
