@@ -18,28 +18,19 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       changes: ${{ steps.changes.outputs.changes }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Use Bun
-        uses: oven-sh/setup-bun@v1
-
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Build package
-        run: bun run build
-
-      - name: Configure git
-        run: |
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
@@ -98,8 +89,7 @@ jobs:
           git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
           git push origin main
 
-      - name: Publish to npm
-        run: npm publish --access public --provenance
+      - run: npm publish --access public --provenance
         # The --provenance flag adds automatic attestation for better security
 
       - name: Create Git Tag
