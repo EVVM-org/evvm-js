@@ -150,7 +150,9 @@ export class EVVM extends BaseService {
 
           return [
             item.amount,
-            item.toAddress ? item.toAddress : "",
+            item.toAddress
+              ? item.toAddress
+              : "0x0000000000000000000000000000000000000000",
             item.toIdentity ? item.toIdentity : "",
           ];
         }),
