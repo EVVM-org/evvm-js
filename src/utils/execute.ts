@@ -6,6 +6,9 @@ import {
 import type { ISigner, HexString } from "@/types";
 
 interface IExecuteOptions {
+  /**
+   * Gas provided for tx execution
+   */
   gas?: number;
 }
 
