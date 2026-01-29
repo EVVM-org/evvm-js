@@ -12,6 +12,7 @@ on:
 
 jobs:
   publish:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -27,11 +28,13 @@ jobs:
         uses: oven-sh/setup-bun@v1
 
       - name: Use Node.js 20.x
+        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org/"
-          # OIDC trusted publishing - no need for NODE_AUTH_TOKEN
+          always-auth: true
+          # OIDC trusted publishing - token output used below
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -101,8 +104,10 @@ jobs:
 
       - name: Publish to npm
         run: npm publish --access public --provenance
-        # Using OIDC trusted publishing - no NODE_AUTH_TOKEN needed
+        # Using OIDC trusted publishing - token emitted by setup-node
         # The --provenance flag adds automatic attestation for better security
+        env:
+          NODE_AUTH_TOKEN: ${{ steps.setup-node.outputs.node-auth-token }}
 
       - name: Create Git Tag
         run: |

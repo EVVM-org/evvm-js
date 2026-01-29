@@ -71,7 +71,7 @@ export class EVVM extends BaseService {
     nonce: bigint;
     priorityFlag: boolean;
     executor?: HexString;
-  }) {
+  }): Promise<SignedAction<IPayData>> {
     const evvmId = await this.getEvvmID();
 
     // create message to sign

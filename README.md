@@ -47,7 +47,13 @@ const wallet = new ethers.Wallet(privateKey, provider);
 const signer = await createSignerWithEthers(wallet);
 
 // 2. Instantiate the EVVM service
-const evvm = new EVVM(signer, "EVVM_CONTRACT_ADDRESS");
+// const evvm = new EVVM(signer, "EVVM_CONTRACT_ADDRESS");
+const evvm = new EVVM({
+  signer,
+  address: "EVVM_CONTRACT_ADDRESS",
+  chainId: 1,
+  evvmId: 1, // optional
+});
 
 // 3. Call a method to create a signed action
 const signedAction = await evvm.pay({
@@ -83,7 +89,11 @@ const client = createWalletClient({
 const signer = await createSignerWithViem(client);
 
 // 2. Instantiate the EVVM service
-const evvm = new EVVM(signer, "EVVM_CONTRACT_ADDRESS");
+const evvm = new EVVM({
+  signer,
+  address: "EVVM_CONTRACT_ADDRESS",
+  chainId: 1,
+});
 
 // Continue with steps 3 and 4 exactly as shown in the ethers.js example
 ```
@@ -101,7 +111,7 @@ Each service is instantiated with a signer and a contract address.
 
 ### Signers
 
-EVVM JS provides helpers to create signers from `ethers.js` and `viem`:
+EVVM JS provides an abstracted `ISigner` interface that allows seamless integration with various client-side Ethereum libraries. Helper functions are provided to create `ISigner` instances from `ethers.js` and `viem` wallets:
 
 - `createSignerWithEthers`: Creates a signer from an `ethers.js` wallet.
 - `createSignerWithViem`: Creates a signer from a `viem` wallet client.
@@ -131,4 +141,3 @@ bun run build
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request on our [GitHub repository](https://github.com/EVVM-org/evvm-js).
-
