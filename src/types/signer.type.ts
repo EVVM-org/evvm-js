@@ -19,9 +19,13 @@ export interface ISigner {
    */
   address: HexString;
   /**
-   * Connected network id
+   * Chain id of the network the signer is connected to
    */
-  chainId: number;
+  getChainId(): Promise<number>;
+  /**
+   * Switch to a new chain using the id provided
+   */
+  switchChain(chainId: number): Promise<void>;
   /**
    * Signs an arbitrary message
    * @returns the generated signature

@@ -20,6 +20,12 @@ export const execute = async <T extends IBaseDataSchema>(
   const serializedAction =
     action instanceof SignedAction ? action.toJSON() : action;
 
+  const activeChain = await signer.getChainId();
+  if (serializedAction.chainId != activeChain) {
+    // switch chains
+    await signer.switchChain(serializedAction.chainId);
+  }
+
   return signer.writeContract({
     contractAbi: [serializedAction.functionAbi],
     contractAddress: serializedAction.contractAddress,

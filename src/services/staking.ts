@@ -6,8 +6,9 @@ import type {
   IPublicStakingData,
   IGoldenStakingData,
 } from "@/types";
-import { BaseService, SignedAction } from "./lib";
+import { BaseService, SignedAction, SignMethod } from "./lib";
 import { StakingABI } from "@/abi";
+import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 /**
  * Staking service wrapper.
@@ -18,10 +19,11 @@ import { StakingABI } from "@/abi";
  * corresponding contract call.
  */
 export class Staking extends BaseService {
-  constructor(signer: ISigner, address: HexString) {
-    super(signer, address, StakingABI);
+  constructor(props: Omit<IBaseServiceProps, "abi">) {
+    super({ ...props, abi: StakingABI });
   }
 
+  @SignMethod
   async presaleStaking({
     user,
     isStaking,
@@ -71,6 +73,7 @@ export class Staking extends BaseService {
     });
   }
 
+  @SignMethod
   async publicStaking({
     user,
     isStaking,
@@ -120,6 +123,7 @@ export class Staking extends BaseService {
     });
   }
 
+  @SignMethod
   async goldenStaking({
     isStaking,
     amountOfStaking,

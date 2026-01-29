@@ -1,29 +1,26 @@
-import type { HexString, ISigner, IAbi } from "@/types";
+import type { HexString, IAbi } from "@/types";
 import { SignatureBuilder } from "./signature-builder";
-
-interface IBaseServiceOpts {
-  evvmId?: bigint;
-}
+import type { IBaseServiceProps } from "@/types/services/base-service.type";
+import type { IBaseDataSchema, SignedAction } from "./signed-action";
 
 export abstract class BaseService extends SignatureBuilder {
+  /**
+   * Address of the deployed service (Smart Contract)
+   */
   address: HexString;
   abi: IAbi;
+  /**
+   * The chain id this service is deployed on
+   */
   chainId: number;
   protected evvmId?: bigint;
 
-  constructor(
-    signer: ISigner,
-    address: HexString,
-    abi: IAbi,
-    opts?: IBaseServiceOpts,
-  ) {
+  constructor({ signer, address, abi, evvmId, chainId }: IBaseServiceProps) {
     super(signer);
     this.address = address;
     this.abi = abi;
-    this.chainId = this.signer.chainId;
-
-    // optional fields
-    this.evvmId = opts?.evvmId;
+    this.chainId = chainId;
+    this.evvmId = evvmId;
   }
 
   /**
@@ -65,4 +62,38 @@ export abstract class BaseService extends SignatureBuilder {
       nonce,
     ]);
   }
+}
+
+/**
+ * Sign methods decorator, asserts the user returns the correct type (Promise<SignedAction<T>>)
+ * and that the signer is connected to the right network.
+ */
+export function SignMethod<T extends IBaseDataSchema>(
+  _target: any,
+  propertyKey: string,
+  // we define a specific return type (Promise<SignedAction<T>>) for decorated methods
+  descriptor: TypedPropertyDescriptor<
+    (...args: any[]) => Promise<SignedAction<T>>
+  >,
+) {
+  const originalMethod = descriptor.value;
+
+  if (!originalMethod)
+    throw new Error(
+      `@SignMethod decorator applied to undefined method ${propertyKey}`,
+    );
+
+  descriptor.value = async function (this: BaseService, ...args: any[]) {
+    // assert the chainId and signer.chainId are correct
+    const activeChain = await this.signer.getChainId();
+    if (this.chainId != activeChain) {
+      // switch chains
+      await this.signer.switchChain(this.chainId);
+    }
+
+    const result = await originalMethod.apply(this, args);
+    return result;
+  };
+
+  return descriptor;
 }

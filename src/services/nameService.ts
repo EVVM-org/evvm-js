@@ -13,8 +13,9 @@ import type {
   IRenewUsernameData,
   IWithdrawOfferData,
 } from "@/types";
-import { BaseService, SignedAction } from "./lib";
+import { BaseService, SignedAction, SignMethod } from "./lib";
 import { NameServiceABI } from "@/abi";
+import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 /**
  * NameService service wrapper.
@@ -25,8 +26,8 @@ import { NameServiceABI } from "@/abi";
  * EIP-191 signature for execution.
  */
 export class NameService extends BaseService {
-  constructor(signer: ISigner, address: HexString) {
-    super(signer, address, NameServiceABI);
+  constructor(props: Omit<IBaseServiceProps, "abi">) {
+    super({ ...props, abi: NameServiceABI });
   }
 
   /**
@@ -40,6 +41,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM signed pay action
    * @returns {Promise<SignedAction<IMakeOfferData>>}
    */
+  @SignMethod
   async makeOffer({
     user,
     username,
@@ -93,6 +95,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IWithdrawOfferData>>}
    */
+  @SignMethod
   async withdrawOffer({
     user,
     username,
@@ -139,6 +142,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IAcceptOfferData>>}
    */
+  @SignMethod
   async acceptOffer({
     user,
     username,
@@ -184,6 +188,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IPreRegistrationUsernameData>>}
    */
+  @SignMethod
   async preRegistrationUsername({
     user,
     hashPreRegisteredUsername,
@@ -226,6 +231,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IRegistrationUsernameData>>}
    */
+  @SignMethod
   async registrationUsername({
     user,
     username,
@@ -272,6 +278,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IAddCustomMetadataData>>}
    */
+  @SignMethod
   async addCustomMetadata({
     user,
     identity,
@@ -317,6 +324,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IRemoveCustomMetadataData>>}
    */
+  @SignMethod
   async removeCustomMetadata({
     user,
     identity,
@@ -362,6 +370,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IFlushCustomMetadataData>>}
    */
+  @SignMethod
   async flushCustomMetadata({
     user,
     identity,
@@ -403,6 +412,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IFlushUsernameData>>}
    */
+  @SignMethod
   async flushUsername({
     user,
     username,
@@ -444,6 +454,7 @@ export class NameService extends BaseService {
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IRenewUsernameData>>}
    */
+  @SignMethod
   async renewUsername({
     user,
     username,

@@ -1,8 +1,9 @@
 import { encodeAbiParameters, sha256 } from "viem";
-import type { ISigner, HexString, IDispersePayData, IPayData } from "@/types";
-import { BaseService } from "./lib";
+import type { HexString, IDispersePayData, IPayData } from "@/types";
+import { BaseService, SignMethod } from "./lib";
 import { EvvmABI } from "@/abi";
 import { SignedAction } from "./lib";
+import type { IBaseServiceProps } from "@/types/services/base-service.type";
 
 const abiDispersePayParameters = [
   {
@@ -32,8 +33,8 @@ type ToData =
  * corresponding contract call.
  */
 export class EVVM extends BaseService {
-  constructor(signer: ISigner, address: HexString) {
-    super(signer, address, EvvmABI);
+  constructor(props: Omit<IBaseServiceProps, "abi">) {
+    super({ ...props, abi: EvvmABI });
   }
 
   /**
@@ -53,6 +54,7 @@ export class EVVM extends BaseService {
    * @param {HexString=} executor - Optional executor address
    * @returns {Promise<SignedAction<IPayData>>} Signed action ready for execution
    */
+  @SignMethod
   async pay({
     to,
     tokenAddress,
@@ -69,7 +71,7 @@ export class EVVM extends BaseService {
     nonce: bigint;
     priorityFlag: boolean;
     executor?: HexString;
-  }): Promise<SignedAction<IPayData>> {
+  }) {
     const evvmId = await this.getEvvmID();
 
     // create message to sign
@@ -118,6 +120,7 @@ export class EVVM extends BaseService {
    * @param {HexString} executor - Executor address
    * @returns {Promise<SignedAction<IDispersePayData>>} Signed disperse action
    */
+  @SignMethod
   async dispersePay({
     toData,
     tokenAddress,

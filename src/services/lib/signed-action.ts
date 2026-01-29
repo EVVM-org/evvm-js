@@ -6,11 +6,11 @@ export interface IBaseDataSchema {
 }
 
 export interface ISerializableSignedAction<T> {
-  chainId: number;
   functionName: string;
   functionAbi: IAbiItem;
-  evvmId: string;
   contractAddress: HexString;
+  chainId: number;
+  evvmId: string;
   data: T;
   args: any[];
 }

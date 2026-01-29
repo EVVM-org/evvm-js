@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		// Enable latest features
+		"experimentalDecorators": true,
 		"lib": [
 			"ESNext",
 			"DOM"

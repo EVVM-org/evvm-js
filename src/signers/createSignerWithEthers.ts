@@ -1,5 +1,6 @@
 import { Contract, type Signer } from "ethers";
 import type { HexString, ISigner } from "@/types";
+import { JsonRpcProvider } from "ethers";
 
 /**
  * Creates an evvm signer using ethersjs v6
@@ -11,12 +12,37 @@ export const createSignerWithEthers = async (
 ): Promise<ISigner> => {
   const address = (await signer.getAddress()) as HexString;
 
-  const network = await signer.provider?.getNetwork();
-  if (!network) throw new Error("No network returned from provider");
-
   return {
     address,
-    chainId: Number(network.chainId),
+    async getChainId() {
+      const network = await signer.provider?.getNetwork();
+      if (!network) throw new Error("No network returned from provider");
+      return Number(network.chainId);
+    },
+    async switchChain(chainId) {
+      const provider = signer.provider;
+      if (!provider) throw new Error("No provider");
+
+      if (!signer.provider || !(signer.provider instanceof JsonRpcProvider)) {
+        throw new Error("Provider does not support RPC send commands");
+      }
+
+      const hexChainId = `0x${chainId.toString(16)}`;
+
+      try {
+        return await signer.provider.send("wallet_switchEthereumChain", [
+          { chainId: hexChainId },
+        ]);
+      } catch (error: any) {
+        // chain has not been added to the wallet
+        if (error.code === 4902) {
+          console.error(
+            `The network ${chainId} is not available in your wallet. Use wallet_addEthereumChain.`,
+          );
+        }
+        throw error;
+      }
+    },
     async signMessage(message) {
       return signer.signMessage(message);
     },

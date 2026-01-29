@@ -8,11 +8,14 @@ export const createSignerWithViem = async (
   const address = walletClient.account?.address;
   if (!address) throw new Error("No address connected");
 
-  const chainId = await walletClient.getChainId();
-
   return {
     address,
-    chainId,
+    async getChainId() {
+      return walletClient.getChainId();
+    },
+    async switchChain(chainId) {
+      return walletClient.switchChain({ id: chainId });
+    },
     async signMessage(message) {
       return walletClient.signMessage({
         account: address,
