@@ -29,6 +29,13 @@ export abstract class BaseService extends SignatureBuilder {
     functionName: string,
     args?: any[],
   ): Promise<T> {
+    const activeChain = await this.signer.getChainId();
+    // assert the chainId and signer.chainId are correct
+    if (this.chainId != activeChain) {
+      // switch chains
+      await this.signer.switchChain(this.chainId);
+    }
+
     return this.signer.readContract<T>({
       functionName,
       contractAddress: this.address,
@@ -83,13 +90,6 @@ export function SignMethod<T extends IBaseDataSchema>(
     );
 
   descriptor.value = async function (this: BaseService, ...args: any[]) {
-    // assert the chainId and signer.chainId are correct
-    const activeChain = await this.signer.getChainId();
-    if (this.chainId != activeChain) {
-      // switch chains
-      await this.signer.switchChain(this.chainId);
-    }
-
     const result = await originalMethod.apply(this, args);
     return result;
   };
