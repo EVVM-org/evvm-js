@@ -66,7 +66,7 @@ describe("EVVM service", () => {
     expect(sa.data.to_address).toBe(
       "0x1111111111111111111111111111111111111111",
     );
-    expect(sa.data.to_identity).toBeUndefined();
+    expect(sa.data.to_identity).toBe("");
   });
 
   it("pay builds SignedAction for identity recipient", async () => {
@@ -88,7 +88,9 @@ describe("EVVM service", () => {
 
     expect(sa.functionName).toBe("pay");
     expect(sa.data.to_identity).toBe("alice");
-    expect(sa.data.to_address).toBeUndefined();
+    expect(sa.data.to_address).toBe(
+      "0x0000000000000000000000000000000000000000",
+    );
     expect(typeof sa.data.signature).toBe("string");
   });
 
