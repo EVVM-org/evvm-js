@@ -1,4 +1,4 @@
-import { encodeAbiParameters, sha256 } from "viem";
+import { encodeAbiParameters, sha256, zeroAddress } from "viem";
 import {
   type HexString,
   type IBaseServiceProps,
@@ -8,7 +8,6 @@ import {
 import { BaseService, SignMethod } from "./lib";
 import { EvvmABI } from "@/abi";
 import { SignedAction } from "./lib";
-import { ZERO_ADDRESS } from "@/types/zero-address.type";
 
 const abiDispersePayParameters = [
   {
@@ -93,7 +92,7 @@ export class EVVM extends BaseService {
 
     const signature = await this.signERC191Message(message);
 
-    const toAddress = to.startsWith("0x") ? (to as HexString) : ZERO_ADDRESS;
+    const toAddress = to.startsWith("0x") ? (to as HexString) : zeroAddress;
     const toIdentity = !to.startsWith("0x") ? to : "";
 
     return new SignedAction(this, evvmId, "pay", {
@@ -105,7 +104,7 @@ export class EVVM extends BaseService {
       priorityFee,
       nonce,
       priorityFlag,
-      executor: executor || ZERO_ADDRESS,
+      executor: executor || zeroAddress,
       signature,
     });
   }
@@ -155,7 +154,7 @@ export class EVVM extends BaseService {
 
           return [
             item.amount,
-            item.toAddress ? item.toAddress : ZERO_ADDRESS,
+            item.toAddress ? item.toAddress : zeroAddress,
             item.toIdentity ? item.toIdentity : "",
           ];
         }),
@@ -179,7 +178,7 @@ export class EVVM extends BaseService {
       toData: toData.map(({ amount, toAddress, toIdentity }) => ({
         amount,
         to_identity: toIdentity ? toIdentity : "",
-        to_address: toAddress ? toAddress : ZERO_ADDRESS,
+        to_address: toAddress ? toAddress : zeroAddress,
       })),
       token: tokenAddress,
       amount,
