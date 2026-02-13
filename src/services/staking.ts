@@ -22,106 +22,113 @@ export class Staking extends BaseService {
     super({ ...props, abi: StakingABI });
   }
 
+  /**
+   * Create and sign a `presaleStaking` action.
+   *
+   * @param {boolean} isStaking - Whether user is staking or unstaking
+   * @param {bigint} nonce - Stake nonce
+   * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
+   * @returns {Promise<SignedAction<IPresaleStakingData>>}
+   */
   @SignMethod
   async presaleStaking({
-    user,
     isStaking,
-    amountOfStaking = 0n,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     isStaking: boolean;
-    amountOfStaking?: bigint;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPresaleStakingData>> {
-    /**
-     * Create and sign a `presaleStaking` action.
-     *
-     * @param {HexString=} user - Optional user address (defaults to signer)
-     * @param {boolean} isStaking - Whether user is staking or unstaking
-     * @param {bigint=} amountOfStaking - Amount to stake (0 if not applicable)
-     * @param {bigint} nonce - Stake nonce
-     * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
-     * @returns {Promise<SignedAction<IPresaleStakingData>>}
-     */
     const evvmId = await this.getEvvmID();
+    const functionName = "presaleStaking";
 
-    const inputs: string =
-      `${isStaking ? "true" : "false"},` +
-      `${amountOfStaking.toString()},` +
-      `${nonce.toString()}`;
-
-    const message = `${evvmId},presaleStaking,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(
+      functionName,
+      {
+        isStaking,
+        amountOfStaking: 1n,
+      },
+      {
+        customAbiParams: [
+          {
+            name: "amountOfStaking",
+            type: "uint256",
+            insertAfter: "isStaking",
+          },
+        ],
+      },
+    );
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    const userAddress = user ?? this.signer.address;
-
     return new SignedAction(this, evvmId, "presaleStaking", {
-      user: userAddress,
+      user: this.signer.address,
       isStaking,
-      amountOfStaking,
       nonce,
       signature,
       priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
+  /**
+   * Create and sign a `publicStaking` action.
+   *
+   * @param {boolean} isStaking
+   * @param {bigint} amountOfStaking
+   * @param {bigint} nonce
+   * @param {SignedAction<IPayData>=} evvmSignedAction
+   * @returns {Promise<SignedAction<IPublicStakingData>>}
+   */
   @SignMethod
   async publicStaking({
-    user,
     isStaking,
     amountOfStaking,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     isStaking: boolean;
     amountOfStaking: bigint;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPublicStakingData>> {
-    /**
-     * Create and sign a `publicStaking` action.
-     *
-     * @param {HexString=} user
-     * @param {boolean} isStaking
-     * @param {bigint} amountOfStaking
-     * @param {bigint} nonce
-     * @param {SignedAction<IPayData>=} evvmSignedAction
-     * @returns {Promise<SignedAction<IPublicStakingData>>}
-     */
     const evvmId = await this.getEvvmID();
+    const functionName = "publicStaking";
 
-    const inputs: string =
-      `${isStaking ? "true" : "false"},` +
-      `${amountOfStaking.toString()},` +
-      `${nonce.toString()}`;
-
-    const message = `${evvmId},publicStaking,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(functionName, {
+      isStaking,
+      amountOfStaking,
+    });
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    const userAddress = user ?? this.signer.address;
-
     return new SignedAction(this, evvmId, "publicStaking", {
-      user: userAddress,
+      user: this.signer.address,
       isStaking,
       amountOfStaking,
       nonce,
       signature,
       priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
+  /**
+   * Create a `goldenStaking` action used by the golden fisher.
+   *
+   * This helper packages the provided amount and optional EVVM signature
+   * into a `SignedAction`. Note: the golden staking flow expects the
+   * on-chain verification to use the EVVM signature provided in
+   * `evvmSignedAction`.
+   *
+   * @param {boolean} isStaking
+   * @param {bigint} amountOfStaking
+   * @param {SignedAction<IPayData>=} evvmSignedAction
+   * @returns {Promise<SignedAction<IGoldenStakingData>>}
+   */
   @SignMethod
   async goldenStaking({
     isStaking,
@@ -132,19 +139,6 @@ export class Staking extends BaseService {
     amountOfStaking: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IGoldenStakingData>> {
-    /**
-     * Create a `goldenStaking` action used by the golden fisher.
-     *
-     * This helper packages the provided amount and optional EVVM signature
-     * into a `SignedAction`. Note: the golden staking flow expects the
-     * on-chain verification to use the EVVM signature provided in
-     * `evvmSignedAction`.
-     *
-     * @param {boolean} isStaking
-     * @param {bigint} amountOfStaking
-     * @param {SignedAction<IPayData>=} evvmSignedAction
-     * @returns {Promise<SignedAction<IGoldenStakingData>>}
-     */
     const evvmId = await this.getEvvmID();
 
     const userSignature = evvmSignedAction?.data.signature;
@@ -152,7 +146,7 @@ export class Staking extends BaseService {
     return new SignedAction(this, evvmId, "goldenStaking", {
       isStaking,
       amountOfStaking,
-      signature_EVVM: userSignature,
+      signatureEvvm: userSignature,
     });
   }
 }

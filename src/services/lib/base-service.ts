@@ -68,14 +68,42 @@ export abstract class BaseService {
   /**
    * Encodes and hashes the given args according to the function ABI
    */
-  buildHashPayload(functionName: string, args: Record<string, any>): HexString {
+  buildHashPayload(
+    functionName: string,
+    args: Record<string, any>,
+    opts?: {
+      customAbiParams?: { name: string; type: string; insertAfter: string }[];
+    },
+  ): HexString {
     const functionAbi = this.getFunctionAbi(functionName);
+    let inputs = [...functionAbi.inputs]; // to not mutate original abi
 
-    const usedInputsAbi = functionAbi.inputs.filter((input) =>
+    if (opts?.customAbiParams) {
+      // insert custom abi params to functionAbi.inputs
+      opts.customAbiParams.forEach((custom) => {
+        const index = inputs.findIndex(
+          (input) => input.name == custom.insertAfter,
+        );
+        if (index == -1) {
+          console.warn(
+            `[WARN]: custom abi insertion couldn't find insertAfter abi`,
+          );
+          return;
+        }
+
+        inputs.splice(index + 1, 0, {
+          type: custom.type,
+          name: custom.name,
+        });
+      });
+    }
+
+    const usedInputsAbi = inputs.filter((input) =>
       Object.prototype.hasOwnProperty.call(args, input.name),
     );
 
     const sortedArgs = usedInputsAbi.map((input) => args[input.name]);
+    console.log({ sortedArgs });
 
     // p2pswap exeption
     const functionNameForHashPayload = /dispatchOrder/.test(functionName)

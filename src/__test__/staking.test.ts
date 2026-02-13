@@ -19,11 +19,7 @@ class FakeSigner implements ISigner {
     return `signed(${message})`;
   }
 
-  async readContract({
-    abi,
-    address,
-    functionName,
-  }: any): Promise<any> {
+  async readContract({ abi, address, functionName }: any): Promise<any> {
     if (functionName === "getEvvmID") return 777n;
     return null;
   }
@@ -58,7 +54,6 @@ describe("Staking service", () => {
     const r = await svc.presaleStaking({
       user: signer.address,
       isStaking: true,
-      amountOfStaking: 100n,
       nonce: 1n,
     } as any);
     expect(r.functionName).toBe("presaleStaking");
@@ -84,6 +79,6 @@ describe("Staking service", () => {
       evvmSignedAction,
     } as any);
     expect(r.functionName).toBe("goldenStaking");
-    expect(typeof r.data.signature_EVVM).toBe("string");
+    expect(typeof r.data.signatureEvvm).toBe("string");
   });
 });
