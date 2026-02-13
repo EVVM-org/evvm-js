@@ -19,11 +19,7 @@ class FakeSigner implements ISigner {
     return `signed(${message})`;
   }
 
-  async readContract({
-    abi,
-    address,
-    functionName,
-  }: any): Promise<any> {
+  async readContract({ abi, address, functionName }: any): Promise<any> {
     if (functionName === "getEvvmID") return 777n;
     return null;
   }
@@ -57,7 +53,7 @@ describe("NameService service", () => {
   it("makeOffer builds SignedAction correctly", async () => {
     const r = await svc.makeOffer({
       username: "alice",
-      expireDate: 1710000000n,
+      expirationDate: 1710000000n,
       amount: 100n,
       nonce: 1n,
       user: signer.address,
@@ -89,7 +85,7 @@ describe("NameService service", () => {
 
     const r = await svc.registrationUsername({
       username: "alice",
-      clowNumber: 1n,
+      lockNumber: 1n,
       nonce: 4n,
       user: signer.address,
     } as any);

@@ -1,5 +1,4 @@
 import type {
-  HexString,
   IPayData,
   IAcceptOfferData,
   IAddCustomMetadataData,
@@ -32,9 +31,8 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `makeOffer` action for a username.
    *
-   * @param {HexString=} user - Optional user address (defaults to signer)
    * @param {string} username - Username being offered for
-   * @param {bigint} expireDate - Expiration timestamp
+   * @param {bigint} expirationDate - Expiration timestamp
    * @param {bigint} amount - Offer amount
    * @param {bigint} nonce - NameService nonce
    * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM signed pay action
@@ -42,52 +40,45 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async makeOffer({
-    user,
     username,
-    expireDate,
+    expirationDate,
     amount,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     username: string;
-    expireDate: bigint;
+    expirationDate: bigint;
     amount: bigint;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IMakeOfferData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "makeOffer";
 
-    const inputs: string =
-      `${username},` +
-      `${expireDate.toString()},` +
-      `${amount.toString()},` +
-      `${nonce.toString()}`;
-
-    const message = `${evvmId},makeOffer,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(functionName, {
+      username,
+      amount,
+      expirationDate,
+    });
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    const userAddress = user ?? this.signer.address;
-
     return new SignedAction(this, evvmId, "makeOffer", {
-      user: userAddress,
+      user: this.signer.address,
       username,
-      expireDate,
+      expirationDate,
       amount,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `withdrawOffer` action.
    *
-   * @param {HexString=} user - Optional address (defaults to signer)
    * @param {string} username
    * @param {bigint} offerID
    * @param {bigint} nonce
@@ -96,13 +87,11 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async withdrawOffer({
-    user,
     username,
     offerID,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     username: string;
     offerID: bigint;
     nonce: bigint;
@@ -116,25 +105,22 @@ export class NameService extends BaseService {
     const message = `${evvmId},withdrawOffer,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "withdrawOffer", {
-      user: userAddress,
+      user: this.signer.address,
       username,
       offerID,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign an `acceptOffer` action.
    *
-   * @param {HexString=} user
    * @param {string} username
    * @param {bigint} offerID
    * @param {bigint} nonce
@@ -143,13 +129,11 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async acceptOffer({
-    user,
     username,
     offerID,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     username: string;
     offerID: bigint;
     nonce: bigint;
@@ -163,25 +147,22 @@ export class NameService extends BaseService {
     const message = `${evvmId},acceptOffer,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "acceptOffer", {
-      user: userAddress,
+      user: this.signer.address,
       username,
       offerID,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `preRegistrationUsername` action with a hashed username.
    *
-   * @param {HexString=} user
    * @param {string} hashPreRegisteredUsername
    * @param {bigint} nonce
    * @param {SignedAction<IPayData>=} evvmSignedAction
@@ -189,12 +170,10 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async preRegistrationUsername({
-    user,
     hashPreRegisteredUsername,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     hashPreRegisteredUsername: string;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -206,71 +185,63 @@ export class NameService extends BaseService {
     const message = `${evvmId},preRegistrationUsername,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "preRegistrationUsername", {
-      user: userAddress,
+      user: this.signer.address,
       hashPreRegisteredUsername,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `registrationUsername` action.
    *
-   * @param {HexString=} user
    * @param {string} username
-   * @param {bigint} clowNumber
+   * @param {bigint} lockNumber
    * @param {bigint} nonce
    * @param {SignedAction<IPayData>=} evvmSignedAction
    * @returns {Promise<SignedAction<IRegistrationUsernameData>>}
    */
   @SignMethod
   async registrationUsername({
-    user,
     username,
-    clowNumber,
+    lockNumber,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     username: string;
-    clowNumber: bigint;
+    lockNumber: bigint;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IRegistrationUsernameData>> {
     const evvmId = await this.getEvvmID();
 
     const inputs: string =
-      `${username},` + `${clowNumber.toString()},` + `${nonce.toString()}`;
+      `${username},` + `${lockNumber.toString()},` + `${nonce.toString()}`;
 
     const message = `${evvmId},registrationUsername,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "registrationUsername", {
-      user: userAddress,
+      user: this.signer.address,
       username,
-      clowNumber,
+      lockNumber,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign an `addCustomMetadata` action for an identity.
    *
-   * @param {HexString=} user
    * @param {string} identity
    * @param {string} value
    * @param {bigint} nonce
@@ -279,13 +250,11 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async addCustomMetadata({
-    user,
     identity,
     value,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     identity: string;
     value: string;
     nonce: bigint;
@@ -298,25 +267,22 @@ export class NameService extends BaseService {
     const message = `${evvmId},addCustomMetadata,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "addCustomMetadata", {
-      user: userAddress,
+      user: this.signer.address,
       identity,
       value,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `removeCustomMetadata` action.
    *
-   * @param {HexString=} user
    * @param {string} identity
    * @param {bigint} key
    * @param {bigint} nonce
@@ -325,13 +291,11 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async removeCustomMetadata({
-    user,
     identity,
     key,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     identity: string;
     key: bigint;
     nonce: bigint;
@@ -345,25 +309,22 @@ export class NameService extends BaseService {
     const message = `${evvmId},removeCustomMetadata,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "removeCustomMetadata", {
-      user: userAddress,
+      user: this.signer.address,
       identity,
       key,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `flushCustomMetadata` action.
    *
-   * @param {HexString=} user
    * @param {string} identity
    * @param {bigint} nonce
    * @param {SignedAction<IPayData>=} evvmSignedAction
@@ -371,12 +332,10 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async flushCustomMetadata({
-    user,
     identity,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     identity: string;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -388,24 +347,21 @@ export class NameService extends BaseService {
     const message = `${evvmId},flushCustomMetadata,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "flushCustomMetadata", {
-      user: userAddress,
+      user: this.signer.address,
       identity,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `flushUsername` action.
    *
-   * @param {HexString=} user
    * @param {string} username
    * @param {bigint} nonce
    * @param {SignedAction<IPayData>=} evvmSignedAction
@@ -413,12 +369,10 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async flushUsername({
-    user,
     username,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     username: string;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -430,24 +384,21 @@ export class NameService extends BaseService {
     const message = `${evvmId},flushUsername,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "flushUsername", {
-      user: userAddress,
+      user: this.signer.address,
       username,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
   /**
    * Create and sign a `renewUsername` action.
    *
-   * @param {HexString=} user
    * @param {string} username
    * @param {bigint} nonce
    * @param {SignedAction<IPayData>=} evvmSignedAction
@@ -455,12 +406,10 @@ export class NameService extends BaseService {
    */
   @SignMethod
   async renewUsername({
-    user,
     username,
     nonce,
     evvmSignedAction,
   }: {
-    user?: HexString;
     username: string;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -472,17 +421,15 @@ export class NameService extends BaseService {
     const message = `${evvmId},renewUsername,${inputs}`;
 
     const signature = await this.signer.signMessage(message);
-    const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "renewUsername", {
-      user: userAddress,
+      user: this.signer.address,
       username,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonce_EVVM: evvmSignedAction?.data.nonce,
-      priorityFlag_EVVM: evvmSignedAction?.data.priorityFlag,
-      signature_EVVM: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 }
