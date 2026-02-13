@@ -55,7 +55,7 @@ export class Staking extends BaseService {
 
     const message = `${evvmId},presaleStaking,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     const userAddress = user ?? this.signer.address;
 
@@ -105,7 +105,7 @@ export class Staking extends BaseService {
 
     const message = `${evvmId},publicStaking,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     const userAddress = user ?? this.signer.address;
 

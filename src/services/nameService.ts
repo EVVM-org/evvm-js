@@ -66,7 +66,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},makeOffer,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     const userAddress = user ?? this.signer.address;
 
@@ -115,7 +115,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},withdrawOffer,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "withdrawOffer", {
@@ -162,7 +162,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},acceptOffer,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "acceptOffer", {
@@ -205,7 +205,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},preRegistrationUsername,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "preRegistrationUsername", {
@@ -251,7 +251,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},registrationUsername,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "registrationUsername", {
@@ -297,7 +297,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},addCustomMetadata,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "addCustomMetadata", {
@@ -344,7 +344,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},removeCustomMetadata,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "removeCustomMetadata", {
@@ -387,7 +387,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},flushCustomMetadata,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "flushCustomMetadata", {
@@ -429,7 +429,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},flushUsername,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "flushUsername", {
@@ -471,7 +471,7 @@ export class NameService extends BaseService {
 
     const message = `${evvmId},renewUsername,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
     const userAddress = user ?? this.signer.address;
 
     return new SignedAction(this, evvmId, "renewUsername", {

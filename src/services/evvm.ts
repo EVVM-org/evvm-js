@@ -1,4 +1,4 @@
-import { encodeAbiParameters, sha256, zeroAddress } from "viem";
+import { zeroAddress } from "viem";
 import {
   type HexString,
   type IBaseServiceProps,
@@ -8,13 +8,6 @@ import {
 import { BaseService, SignMethod } from "./lib";
 import { EvvmABI } from "@/abi";
 import { SignedAction } from "./lib";
-
-const abiDispersePayParameters = [
-  {
-    type: "tuple[]",
-    components: [{ type: "uint256" }, { type: "address" }, { type: "string" }],
-  },
-];
 
 type ToData =
   | {
@@ -54,57 +47,63 @@ export class EVVM extends BaseService {
    * @param {bigint} amount - Amount to transfer
    * @param {bigint} priorityFee - Priority fee to attach to the EVVM execution
    * @param {bigint} nonce - EVVM nonce for this action
-   * @param {boolean} priorityFlag - Whether this action is prioritized
+   * @param {boolean} isAsyncExec - Async execution
    * @param {HexString=} executor - Optional executor address
    * @returns {Promise<SignedAction<IPayData>>} Signed action ready for execution
    */
   @SignMethod
   async pay({
-    to,
+    toAddress = zeroAddress,
+    toIdentity = "",
     tokenAddress,
     amount,
     priorityFee,
+    executor = zeroAddress,
     nonce,
-    priorityFlag,
-    executor,
+    isAsyncExec,
   }: {
-    to: HexString | string;
+    toAddress?: HexString;
+    toIdentity?: string;
     tokenAddress: HexString;
     amount: bigint;
     priorityFee: bigint;
     nonce: bigint;
-    priorityFlag: boolean;
+    isAsyncExec: boolean;
     executor?: HexString;
   }): Promise<SignedAction<IPayData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "pay";
 
-    // create message to sign
-    const inputs: string =
-      `${to.startsWith("0x") ? to.toLowerCase() : to},` +
-      `${tokenAddress.toLowerCase()},` +
-      `${amount.toString()},` +
-      `${priorityFee.toString()},` +
-      `${nonce.toString()},` +
-      `${priorityFlag ? "true" : "false"},` +
-      `${executor && executor.toLowerCase()}`;
+    if (toAddress != zeroAddress && toIdentity != "")
+      throw new Error("Can't call EVVM.pay with both toAddress and toIdentity");
 
-    const message = `${evvmId.toString()},pay,${inputs}`;
+    const hashPayload = this.buildHashPayload(functionName, {
+      to_address: toAddress,
+      to_identity: toIdentity,
+      token: tokenAddress,
+      amount,
+      priorityFee,
+      executor,
+    });
 
-    const signature = await this.signERC191Message(message);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      nonce,
+      isAsyncExec,
+    );
+    const signature = await this.signer.signMessage(message);
 
-    const toAddress = to.startsWith("0x") ? (to as HexString) : zeroAddress;
-    const toIdentity = !to.startsWith("0x") ? to : "";
-
-    return new SignedAction(this, evvmId, "pay", {
+    return new SignedAction(this, evvmId, functionName, {
       from: this.signer.address,
       to_address: toAddress,
       to_identity: toIdentity,
       token: tokenAddress,
       amount,
       priorityFee,
+      executor,
       nonce,
-      priorityFlag,
-      executor: executor || zeroAddress,
+      isAsyncExec,
       signature,
     });
   }
@@ -120,7 +119,7 @@ export class EVVM extends BaseService {
    * @param {bigint} amount - Total amount
    * @param {bigint} priorityFee - Priority fee
    * @param {bigint} nonce - EVVM nonce
-   * @param {boolean} priorityFlag - Priority flag
+   * @param {boolean} isAsyncExec - Async execution
    * @param {HexString} executor - Executor address
    * @returns {Promise<SignedAction<IDispersePayData>>} Signed disperse action
    */
@@ -130,62 +129,61 @@ export class EVVM extends BaseService {
     tokenAddress,
     amount,
     priorityFee,
+    executor = zeroAddress,
     nonce,
-    priorityFlag,
-    executor,
+    isAsyncExec,
   }: {
     toData: ToData[];
     tokenAddress: HexString;
     amount: bigint;
     priorityFee: bigint;
-    nonce: bigint;
-    priorityFlag: boolean;
     executor: HexString;
+    nonce: bigint;
+    isAsyncExec: boolean;
   }): Promise<SignedAction<IDispersePayData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "dispersePay";
 
-    const hashedToData = sha256(
-      encodeAbiParameters(abiDispersePayParameters, [
-        toData.map((item) => {
-          if (item.toAddress && item.toIdentity)
-            throw new Error(
-              "Error, cannot provide both toAddress and toIdentity",
-            );
+    const hashPayload = this.buildHashPayload(functionName, {
+      // convert toData to be a tuple [amount, toAddress, toIdentity] as described in ABI
+      toData: toData.map((item, index) => {
+        if (item.toAddress && item.toIdentity)
+          throw new Error(
+            `Error, cannot provide both toAddress and toIdentity (toData at index ${index})`,
+          );
 
-          return [
-            item.amount,
-            item.toAddress ? item.toAddress : zeroAddress,
-            item.toIdentity ? item.toIdentity : "",
-          ];
-        }),
-      ]),
+        return [
+          item.amount,
+          item.toAddress ? item.toAddress : zeroAddress,
+          item.toIdentity ? item.toIdentity : "",
+        ];
+      }),
+      token: tokenAddress,
+      amount,
+      priorityFee,
+      executor,
+    });
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      nonce,
+      isAsyncExec,
     );
+    const signature = await this.signer.signMessage(message);
 
-    const inputs: string =
-      `${hashedToData.toLowerCase()},` +
-      `${tokenAddress.toLowerCase()},` +
-      `${amount.toString()},` +
-      `${priorityFee.toString()},` +
-      `${nonce.toString()},` +
-      `${priorityFlag ? "true" : "false"},` +
-      `${executor && executor.toLowerCase()}`;
-
-    const message = `${evvmId.toString()},dispersePay,${inputs}`;
-    const signature = await this.signERC191Message(message);
-
-    return new SignedAction(this, evvmId, "dispersePay", {
+    return new SignedAction(this, evvmId, functionName, {
       from: this.signer.address,
       toData: toData.map(({ amount, toAddress, toIdentity }) => ({
         amount,
-        to_identity: toIdentity ? toIdentity : "",
         to_address: toAddress ? toAddress : zeroAddress,
+        to_identity: toIdentity ? toIdentity : "",
       })),
       token: tokenAddress,
       amount,
       priorityFee,
-      nonce,
-      priorityFlag,
       executor,
+      nonce,
+      isAsyncExec,
       signature,
     });
   }

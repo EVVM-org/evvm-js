@@ -61,7 +61,7 @@ export class P2PSwap extends BaseService {
 
     const message = `${evvmId},makeOrder,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "makeOrder", {
       user: this.signer.address,
@@ -114,7 +114,7 @@ export class P2PSwap extends BaseService {
 
     const message = `${evvmId},cancelOrder,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "cancelOrder", {
       user: this.signer.address,
@@ -169,7 +169,7 @@ export class P2PSwap extends BaseService {
 
     const message = `${evvmId},dispatchOrder,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "dispatchOrder_fillPropotionalFee", {
       user: this.signer.address,
@@ -228,7 +228,7 @@ export class P2PSwap extends BaseService {
 
     const message = `${evvmId},dispatchOrder,${inputs}`;
 
-    const signature = await this.signERC191Message(message);
+    const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "dispatchOrder_fillFixedFee", {
       user: this.signer.address,

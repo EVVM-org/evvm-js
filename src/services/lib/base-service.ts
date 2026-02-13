@@ -1,8 +1,14 @@
-import type { HexString, IAbi, IBaseServiceProps } from "@/types";
-import { SignatureBuilder } from "./signature-builder";
+import type {
+  HexString,
+  IAbi,
+  IAbiItem,
+  IBaseServiceProps,
+  ISigner,
+} from "@/types";
 import type { IBaseDataSchema, SignedAction } from "./signed-action";
+import { encodeAbiParameters, keccak256, type AbiParameter } from "viem";
 
-export abstract class BaseService extends SignatureBuilder {
+export abstract class BaseService {
   /**
    * Address of the deployed service (Smart Contract)
    */
@@ -13,9 +19,10 @@ export abstract class BaseService extends SignatureBuilder {
    */
   chainId: number;
   protected evvmId?: bigint;
+  protected signer: ISigner;
 
   constructor({ signer, address, abi, evvmId, chainId }: IBaseServiceProps) {
-    super(signer);
+    this.signer = signer;
     this.address = address;
     this.abi = abi;
     this.chainId = chainId;
@@ -42,6 +49,54 @@ export abstract class BaseService extends SignatureBuilder {
       contractAbi: this.abi,
       args: args || [],
     });
+  }
+
+  /**
+   * Returns the function ABI from the service ABI
+   */
+  getFunctionAbi(functionName: string): IAbiItem {
+    const functionAbi = this.abi.find(
+      (item) => item.type === "function" && item.name === functionName,
+    );
+
+    if (!functionAbi)
+      throw new Error(`No function signature with name ${functionName}`);
+
+    return functionAbi;
+  }
+
+  /**
+   * Encodes and hashes the given args according to the function ABI
+   */
+  buildHashPayload(functionName: string, args: Record<string, any>): HexString {
+    const functionAbi = this.getFunctionAbi(functionName);
+
+    const usedInputsAbi = functionAbi.inputs.filter((input) =>
+      Object.prototype.hasOwnProperty.call(args, input.name),
+    );
+
+    const sortedArgs = usedInputsAbi.map((input) => args[input.name]);
+
+    const inputsAbi = [{ type: "string" }, ...usedInputsAbi];
+    const values = [functionName, ...sortedArgs];
+
+    const encoded = encodeAbiParameters(inputsAbi, values);
+
+    return keccak256(encoded);
+  }
+
+  /**
+   * Builds a message of the form:
+   * evvmId,serviceAddress,hashPayload,nonce,isAsyncExec
+   */
+  buildMessageToSign(
+    evvmId: bigint,
+    hashPayload: HexString,
+    nonce: bigint,
+    isAsyncExec: boolean,
+  ): string {
+    // evvmId,serviceAddress,hashPayload,executor(to be implemented),nonce,isAsyncExec
+    return `${evvmId.toString()},${this.address},${hashPayload},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
   }
 
   /**

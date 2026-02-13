@@ -7,9 +7,9 @@ export interface IPayData {
   token: HexString;
   amount: bigint;
   priorityFee?: bigint;
-  nonce: bigint;
-  priorityFlag: boolean;
   executor: HexString;
+  nonce: bigint;
+  isAsyncExec: boolean;
   signature: string;
 }
 
@@ -17,14 +17,14 @@ export interface IDispersePayData {
   from: HexString;
   toData: {
     amount: bigint;
-    to_address: string | HexString;
+    to_address: HexString;
     to_identity: string;
   }[];
   token: HexString;
   amount: bigint;
   priorityFee?: bigint;
-  nonce: bigint;
-  priorityFlag: boolean;
   executor: HexString;
+  nonce: bigint;
+  isAsyncExec: boolean;
   signature: string;
 }

@@ -38,7 +38,7 @@ export class SignedAction<T extends IBaseDataSchema> {
     this.evvmId = evvmId;
     this.functionName = functionName;
     this.data = data;
-    this.functionAbi = this.getFunctionAbi();
+    this.functionAbi = this.service.getFunctionAbi(functionName);
     this.args = this.getArgs();
   }
 
@@ -54,17 +54,6 @@ export class SignedAction<T extends IBaseDataSchema> {
       data: serializedData,
       args: this.args,
     };
-  }
-
-  private getFunctionAbi() {
-    const functionAbi = this.service.abi.find(
-      (item) => item.type === "function" && item.name === this.functionName,
-    );
-
-    if (!functionAbi)
-      throw new Error(`No function signature with name ${this.functionName}`);
-
-    return functionAbi;
   }
 
   private getArgs(): any[] {
