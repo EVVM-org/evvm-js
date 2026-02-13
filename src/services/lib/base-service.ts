@@ -103,7 +103,6 @@ export abstract class BaseService {
     );
 
     const sortedArgs = usedInputsAbi.map((input) => args[input.name]);
-    console.log({ sortedArgs });
 
     // p2pswap exeption
     const functionNameForHashPayload = /dispatchOrder/.test(functionName)
