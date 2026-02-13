@@ -77,8 +77,13 @@ export abstract class BaseService {
 
     const sortedArgs = usedInputsAbi.map((input) => args[input.name]);
 
+    // p2pswap exeption
+    const functionNameForHashPayload = /dispatchOrder/.test(functionName)
+      ? "dispatchOrder"
+      : functionName;
+
     const inputsAbi = [{ type: "string" }, ...usedInputsAbi];
-    const values = [functionName, ...sortedArgs];
+    const values = [functionNameForHashPayload, ...sortedArgs];
 
     const encoded = encodeAbiParameters(inputsAbi, values);
 

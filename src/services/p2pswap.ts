@@ -51,19 +51,18 @@ export class P2PSwap extends BaseService {
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IMakeOrderData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "makeOrder";
 
-    const inputs: string =
-      `${nonce.toString()},` +
-      `${tokenA},` +
-      `${tokenB},` +
-      `${amountA},` +
-      `${amountB}`;
-
-    const message = `${evvmId},makeOrder,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(functionName, {
+      tokenA,
+      tokenB,
+      amountA,
+      amountB,
+    });
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    return new SignedAction(this, evvmId, "makeOrder", {
+    return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
       metadata: {
         nonce,
@@ -73,10 +72,9 @@ export class P2PSwap extends BaseService {
         amountB,
       },
       signature,
-      _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
-      _nonce_Evvm: evvmSignedAction.data.nonce,
-      _priority_Evvm: evvmSignedAction.data.priorityFlag,
-      _signature_Evvm: evvmSignedAction.data.signature,
+      priorityFeeEvvm: evvmSignedAction.data.priorityFee,
+      nonceEvvm: evvmSignedAction.data.nonce,
+      signatureEvvm: evvmSignedAction.data.signature,
     });
   }
 
@@ -105,18 +103,17 @@ export class P2PSwap extends BaseService {
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<ICancelOrderData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "cancelOrder";
 
-    const inputs: string =
-      `${nonce.toString()},` +
-      `${tokenA},` +
-      `${tokenB},` +
-      `${orderId.toString()}`;
-
-    const message = `${evvmId},cancelOrder,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(functionName, {
+      tokenA,
+      tokenB,
+      orderId,
+    });
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    return new SignedAction(this, evvmId, "cancelOrder", {
+    return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
       metadata: {
         nonce,
@@ -125,10 +122,9 @@ export class P2PSwap extends BaseService {
         orderId,
         signature,
       },
-      _priorityFee_Evvm: evvmSignedAction?.data.priorityFee,
-      _nonce_Evvm: evvmSignedAction?.data.nonce,
-      _priority_Evvm: evvmSignedAction?.data.priorityFlag,
-      _signature_Evvm: evvmSignedAction?.data.signature,
+      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
+      nonceEvvm: evvmSignedAction?.data.nonce,
+      signatureEvvm: evvmSignedAction?.data.signature,
     });
   }
 
@@ -160,18 +156,18 @@ export class P2PSwap extends BaseService {
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IDispatchOrderData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "dispatchOrder_fillPropotionalFee";
 
-    const inputs: string =
-      `${nonce.toString()},` +
-      `${tokenA},` +
-      `${tokenB},` +
-      `${orderId.toString()}`;
-
-    const message = `${evvmId},dispatchOrder,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(functionName, {
+      tokenA,
+      tokenB,
+      orderId,
+    });
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    return new SignedAction(this, evvmId, "dispatchOrder_fillPropotionalFee", {
+    // here, functionName is different from the one used in buildHashPayload
+    return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
       metadata: {
         nonce,
@@ -181,10 +177,9 @@ export class P2PSwap extends BaseService {
         amountOfTokenBToFill: amountOfTokenBToFill,
         signature,
       },
-      _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
-      _nonce_Evvm: evvmSignedAction.data.nonce,
-      _priority_Evvm: evvmSignedAction.data.priorityFlag,
-      _signature_Evvm: evvmSignedAction.data.signature,
+      priorityFeeEvvm: evvmSignedAction.data.priorityFee,
+      nonceEvvm: evvmSignedAction.data.nonce,
+      signatureEvvm: evvmSignedAction.data.signature,
     });
   }
 
@@ -219,18 +214,17 @@ export class P2PSwap extends BaseService {
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IDispatchOrderFixedFeeData>> {
     const evvmId = await this.getEvvmID();
+    const functionName = "dispatchOrder_fillFixedFee";
 
-    const inputs: string =
-      `${nonce.toString()},` +
-      `${tokenA},` +
-      `${tokenB},` +
-      `${orderId.toString()}`;
-
-    const message = `${evvmId},dispatchOrder,${inputs}`;
-
+    const hashPayload = this.buildHashPayload(functionName, {
+      tokenA,
+      tokenB,
+      orderId,
+    });
+    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    return new SignedAction(this, evvmId, "dispatchOrder_fillFixedFee", {
+    return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
       metadata: {
         nonce,
@@ -241,10 +235,9 @@ export class P2PSwap extends BaseService {
         signature,
       },
       maxFillFixedFee,
-      _priorityFee_Evvm: evvmSignedAction.data.priorityFee,
-      _nonce_Evvm: evvmSignedAction.data.nonce,
-      _priority_Evvm: evvmSignedAction.data.priorityFlag,
-      _signature_Evvm: evvmSignedAction.data.signature,
+      priorityFeeEvvm: evvmSignedAction.data.priorityFee,
+      nonceEvvm: evvmSignedAction.data.nonce,
+      signatureEvvm: evvmSignedAction.data.signature,
     });
   }
 }

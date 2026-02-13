@@ -10,10 +10,9 @@ export interface IMakeOrderData {
     amountB: bigint;
   };
   signature: string;
-  _priorityFee_Evvm?: bigint;
-  _nonce_Evvm: bigint;
-  _priority_Evvm: boolean;
-  _signature_Evvm: string;
+  priorityFeeEvvm?: bigint;
+  nonceEvvm: bigint;
+  signatureEvvm: string;
 }
 
 export interface ICancelOrderData {
@@ -25,10 +24,9 @@ export interface ICancelOrderData {
     orderId: bigint;
     signature: string;
   };
-  _priorityFee_Evvm?: bigint;
-  _nonce_Evvm?: bigint;
-  _priority_Evvm?: boolean;
-  _signature_Evvm?: string;
+  priorityFeeEvvm?: bigint;
+  nonceEvvm?: bigint;
+  signatureEvvm?: string;
 }
 
 export interface IDispatchOrderData {
@@ -41,10 +39,9 @@ export interface IDispatchOrderData {
     amountOfTokenBToFill: bigint;
     signature: string;
   };
-  _priorityFee_Evvm?: bigint;
-  _nonce_Evvm: bigint;
-  _priority_Evvm: boolean;
-  _signature_Evvm: string;
+  priorityFeeEvvm?: bigint;
+  nonceEvvm: bigint;
+  signatureEvvm: string;
 }
 
 export interface IDispatchOrderFixedFeeData extends IDispatchOrderData {
