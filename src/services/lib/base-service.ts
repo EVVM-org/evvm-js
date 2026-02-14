@@ -10,12 +10,12 @@ import { encodeAbiParameters, keccak256, type AbiParameter } from "viem";
 
 export abstract class BaseService {
   /**
-   * Address of the deployed service (Smart Contract)
+   * Address of the deployed service (smart contract).
    */
   address: HexString;
   abi: IAbi;
   /**
-   * The chain id this service is deployed on
+   * The chain id this service is deployed on.
    */
   chainId: number;
   protected evvmId?: bigint;
@@ -30,7 +30,7 @@ export abstract class BaseService {
   }
 
   /**
-   * Calls a readonly method of the service
+   * Calls a readonly method of the service.
    */
   protected async view<T = any>(
     functionName: string,
@@ -52,7 +52,7 @@ export abstract class BaseService {
   }
 
   /**
-   * Returns the function ABI from the service ABI
+   * Returns the function ABI from the service ABI.
    */
   getFunctionAbi(functionName: string): IAbiItem {
     const functionAbi = this.abi.find(
@@ -66,7 +66,7 @@ export abstract class BaseService {
   }
 
   /**
-   * Encodes and hashes the given args according to the function ABI
+   * Encodes and hashes the given args according to the function ABI.
    */
   buildHashPayload(
     functionName: string,
@@ -104,7 +104,7 @@ export abstract class BaseService {
 
     const sortedArgs = usedInputsAbi.map((input) => args[input.name]);
 
-    // p2pswap exeption
+    // p2pswap exception
     const functionNameForHashPayload = /dispatchOrder/.test(functionName)
       ? "dispatchOrder"
       : functionName;
@@ -132,7 +132,7 @@ export abstract class BaseService {
   }
 
   /**
-   * Retrieves the evvm ID of the service
+   * Retrieves the evvm ID of the service.
    */
   async getEvvmID(): Promise<bigint> {
     const evvmId = this.evvmId || (await this.view<bigint>("getEvvmID"));
@@ -141,8 +141,7 @@ export abstract class BaseService {
 }
 
 /**
- * Sign methods decorator, asserts the user returns the correct type (Promise<SignedAction<T>>)
- * and that the signer is connected to the right network.
+ * Sign methods decorator, asserts the user returns the correct type (Promise<SignedAction<T>>).
  */
 export function SignMethod<T extends IBaseDataSchema>(
   _target: any,

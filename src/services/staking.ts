@@ -27,8 +27,8 @@ export class Staking extends BaseService {
    *
    * @param {boolean} isStaking - Whether user is staking or unstaking
    * @param {bigint} nonce - Stake nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
-   * @returns {Promise<SignedAction<IPresaleStakingData>>}
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM pay signed action
+   * @returns {Promise<SignedAction<IPresaleStakingData>>} Signed presale staking action
    */
   @SignMethod
   async presaleStaking({
@@ -76,11 +76,11 @@ export class Staking extends BaseService {
   /**
    * Create and sign a `publicStaking` action.
    *
-   * @param {boolean} isStaking
-   * @param {bigint} amountOfStaking
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IPublicStakingData>>}
+   * @param {boolean} isStaking - Whether user is staking or unstaking
+   * @param {bigint} amountOfStaking - Amount to stake or unstake
+   * @param {bigint} nonce - Stake nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM pay signed action
+   * @returns {Promise<SignedAction<IPublicStakingData>>} Signed public staking action
    */
   @SignMethod
   async publicStaking({
@@ -124,10 +124,10 @@ export class Staking extends BaseService {
    * on-chain verification to use the EVVM signature provided in
    * `evvmSignedAction`.
    *
-   * @param {boolean} isStaking
-   * @param {bigint} amountOfStaking
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IGoldenStakingData>>}
+   * @param {boolean} isStaking - Whether user is staking or unstaking
+   * @param {bigint} amountOfStaking - Amount to stake or unstake
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM pay signed action
+   * @returns {Promise<SignedAction<IGoldenStakingData>>} Signed golden staking action
    */
   @SignMethod
   async goldenStaking({

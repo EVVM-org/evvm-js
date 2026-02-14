@@ -7,13 +7,13 @@ import type { ISigner, HexString } from "@/types";
 
 interface IExecuteOptions {
   /**
-   * Gas provided for tx execution
+   * Gas provided for transaction execution.
    */
   gas?: number;
 }
 
 /**
- * Executes the given SignedAction
+ * Executes the given SignedAction.
  */
 export const execute = async <T extends IBaseDataSchema>(
   signer: ISigner,

@@ -32,7 +32,7 @@ export class P2PSwap extends BaseService {
    * @param {bigint} amountA - Amount of token A
    * @param {bigint} amountB - Amount of token B
    * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
-   * @returns {Promise<SignedAction<IMakeOrderData>>}
+   * @returns {Promise<SignedAction<IMakeOrderData>>} Signed make order action
    */
   @SignMethod
   async makeOrder({
@@ -85,8 +85,8 @@ export class P2PSwap extends BaseService {
    * @param {HexString} tokenA - Token A address
    * @param {HexString} tokenB - Token B address
    * @param {bigint} orderId - Order identifier
-   * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM pay signed action
-   * @returns {Promise<SignedAction<ICancelOrderData>>}
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM pay signed action
+   * @returns {Promise<SignedAction<ICancelOrderData>>} Signed cancel order action
    */
   @SignMethod
   async cancelOrder({
@@ -131,13 +131,13 @@ export class P2PSwap extends BaseService {
   /**
    * Create and sign a `dispatchOrder` action (proportional fee variant).
    *
-   * @param {bigint} nonce
-   * @param {HexString} tokenA
-   * @param {HexString} tokenB
-   * @param {bigint} orderId
-   * @param {bigint} amountOfTokenBToFill
-   * @param {SignedAction<IPayData>} evvmSignedAction
-   * @returns {Promise<SignedAction<IDispatchOrderData>>}
+   * @param {bigint} nonce - Dispatch nonce
+   * @param {HexString} tokenA - Token A address
+   * @param {HexString} tokenB - Token B address
+   * @param {bigint} orderId - Order identifier
+   * @param {bigint} amountOfTokenBToFill - Amount of token B to fill
+   * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
+   * @returns {Promise<SignedAction<IDispatchOrderData>>} Signed dispatch order action
    */
   @SignMethod
   async dispatchOrder_fillPropotionalFee({
@@ -186,14 +186,14 @@ export class P2PSwap extends BaseService {
   /**
    * Create and sign a `dispatchOrder` action (fixed fee variant).
    *
-   * @param {bigint} nonce
-   * @param {HexString} tokenA
-   * @param {HexString} tokenB
-   * @param {bigint} orderId
-   * @param {bigint} amountOfTokenBToFill
-   * @param {bigint} maxFillFixedFee
-   * @param {SignedAction<IPayData>} evvmSignedAction
-   * @returns {Promise<SignedAction<IDispatchOrderFixedFeeData>>}
+   * @param {bigint} nonce - Dispatch nonce
+   * @param {HexString} tokenA - Token A address
+   * @param {HexString} tokenB - Token B address
+   * @param {bigint} orderId - Order identifier
+   * @param {bigint} amountOfTokenBToFill - Amount of token B to fill
+   * @param {bigint} maxFillFixedFee - Max fixed fee for filling
+   * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
+   * @returns {Promise<SignedAction<IDispatchOrderFixedFeeData>>} Signed dispatch order action
    */
   @SignMethod
   async dispatchOrder_fillFixedFee({

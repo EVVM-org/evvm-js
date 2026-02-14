@@ -36,7 +36,7 @@ Here's a quick example of how to use EVVM JS to sign a payment action:
 **With Ethers.js**
 
 ```typescript
-import { EVVM, execute } from "@evvm/evvm-js";
+import { Core, execute } from "@evvm/evvm-js";
 import { createSignerWithEthers } from "@evvm/evvm-js/signers";
 import { ethers } from "ethers";
 
@@ -46,8 +46,8 @@ const privateKey = "YOUR_PRIVATE_KEY";
 const wallet = new ethers.Wallet(privateKey, provider);
 const signer = await createSignerWithEthers(wallet);
 
-// 2. Instantiate the EVVM service
-const evvm = new EVVM({
+// 2. Instantiate the Core service
+const core = new Core({
   signer,
   address: "EVVM_CONTRACT_ADDRESS",
   chainId: 1,
@@ -55,13 +55,12 @@ const evvm = new EVVM({
 });
 
 // 3. Call a method to create a signed action
-const signedAction = await evvm.pay({
-  to: "RECIPIENT_ADDRESS",
+const signedAction = await core.pay({
+  toAddress: "RECIPIENT_ADDRESS",
   tokenAddress: "TOKEN_ADDRESS",
   amount: 100n, // Use BigInt for amounts
   priorityFee: 0n,
   nonce: 1n,
-  priorityFlag: false,
 });
 
 // 4. Execute the signed action
@@ -72,7 +71,7 @@ console.log(result);
 **With Viem**
 
 ```typescript
-import { EVVM } from "@evvm/evvm-js";
+import { Core } from "@evvm/evvm-js";
 import { createSignerWithViem } from "@evvm/evvm-js/signers";
 import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -88,7 +87,7 @@ const client = createWalletClient({
 const signer = await createSignerWithViem(client);
 
 // 2. Instantiate the EVVM service
-const evvm = new EVVM({
+const core = new Core({
   signer,
   address: "EVVM_CONTRACT_ADDRESS",
   chainId: 1,
@@ -101,7 +100,7 @@ const evvm = new EVVM({
 
 ### Services
 
-- `EVVM`: Core EVVM service for creating signed actions (payments, identity, staking, swaps).
+- `Core`: Core EVVM service for creating signed actions (payments, nonces and state).
 - `NameService`: Manage identities.
 - `Staking`: Handle staking operations.
 - `P2PSwap`: Perform peer-to-peer swaps.

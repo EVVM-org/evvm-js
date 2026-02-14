@@ -35,14 +35,14 @@ export class Core extends BaseService {
   }
 
   /**
-   * Returns a valid Sync nonce
+   * Returns the next sync nonce.
    */
   async getSyncNonce(): Promise<bigint> {
     return this.view<bigint>("getNextCurrentSyncNonce", [this.signer.address]);
   }
 
   /**
-   * Used to assert a given async nonce hasn't been used
+   * Checks whether an async nonce has already been used.
    */
   async isValidAsyncNonce(nonce: bigint): Promise<boolean> {
     return this.view<boolean>("getIfUsedAsyncNonce", [
@@ -59,14 +59,14 @@ export class Core extends BaseService {
    * required to execute the `pay` call on-chain (serialized args and
    * signature).
    *
-   * @param {HexString} toAddresss - Recipient address (0x...)
-   * @param {string} toIdentity - Recipient address (identity)
+   * @param {HexString} toAddress - Recipient address (0x...)
+   * @param {string} toIdentity - Recipient identity
    * @param {HexString} tokenAddress - Token contract address used for payment
    * @param {bigint} amount - Amount to transfer
    * @param {bigint} priorityFee - Priority fee to attach to the EVVM execution
    * @param {bigint} nonce - EVVM nonce for this action
    * @param {boolean} isAsyncExec - Async execution
-   * @param {HexString=} executor - Optional executor address
+   * @param {HexString} [executor] - Optional executor address
    * @returns {Promise<SignedAction<IPayData>>} Signed action ready for execution
    */
   @SignMethod
@@ -132,7 +132,7 @@ export class Core extends BaseService {
    * The `toData` array is ABI-encoded and hashed for compact signing. The
    * returned `SignedAction` contains the hashed payload and signature.
    *
-   * @param {{amount: bigint; toAddress: HexString; toIdentity: HexString;}[]} toData - Recipients data
+   * @param {Array<{amount: bigint; toAddress?: HexString; toIdentity?: string;}>} toData - Recipients data
    * @param {HexString} tokenAddress - Token address used for disperse
    * @param {bigint} amount - Total amount
    * @param {bigint} priorityFee - Priority fee

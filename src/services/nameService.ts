@@ -16,7 +16,7 @@ import { BaseService, SignedAction, SignMethod } from "./lib";
 import { NameServiceABI } from "@/abi";
 
 /**
- * NameService service wrapper.
+ * NameService wrapper.
  *
  * Creates signed actions for NameService operations such as offers,
  * username registration, metadata management and renewal. Each helper
@@ -35,8 +35,8 @@ export class NameService extends BaseService {
    * @param {bigint} expirationDate - Expiration timestamp
    * @param {bigint} amount - Offer amount
    * @param {bigint} nonce - NameService nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction - Optional EVVM signed pay action
-   * @returns {Promise<SignedAction<IMakeOfferData>>}
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IMakeOfferData>>} Signed make offer action
    */
   @SignMethod
   async makeOffer({
@@ -79,11 +79,11 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `withdrawOffer` action.
    *
-   * @param {string} username
-   * @param {bigint} offerID
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IWithdrawOfferData>>}
+   * @param {string} username - Username tied to the offer
+   * @param {bigint} offerID - Offer identifier
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IWithdrawOfferData>>} Signed withdraw offer action
    */
   @SignMethod
   async withdrawOffer({
@@ -121,11 +121,11 @@ export class NameService extends BaseService {
   /**
    * Create and sign an `acceptOffer` action.
    *
-   * @param {string} username
-   * @param {bigint} offerID
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IAcceptOfferData>>}
+   * @param {string} username - Username tied to the offer
+   * @param {bigint} offerID - Offer identifier
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IAcceptOfferData>>} Signed accept offer action
    */
   @SignMethod
   async acceptOffer({
@@ -163,10 +163,10 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `preRegistrationUsername` action with a hashed username.
    *
-   * @param {string} hashPreRegisteredUsername
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IPreRegistrationUsernameData>>}
+   * @param {string} hashPreRegisteredUsername - Hashed pre-registered username
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IPreRegistrationUsernameData>>} Signed pre-registration action
    */
   @SignMethod
   async preRegistrationUsername({
@@ -200,11 +200,11 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `registrationUsername` action.
    *
-   * @param {string} username
-   * @param {bigint} lockNumber
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IRegistrationUsernameData>>}
+   * @param {string} username - Username to register
+   * @param {bigint} lockNumber - Lock number used by NameService
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IRegistrationUsernameData>>} Signed registration action
    */
   @SignMethod
   async registrationUsername({
@@ -242,11 +242,11 @@ export class NameService extends BaseService {
   /**
    * Create and sign an `addCustomMetadata` action for an identity.
    *
-   * @param {string} identity
-   * @param {string} value
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IAddCustomMetadataData>>}
+   * @param {string} identity - Target identity
+   * @param {string} value - Metadata value to add
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IAddCustomMetadataData>>} Signed add metadata action
    */
   @SignMethod
   async addCustomMetadata({
@@ -283,11 +283,11 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `removeCustomMetadata` action.
    *
-   * @param {string} identity
-   * @param {bigint} key
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IRemoveCustomMetadataData>>}
+   * @param {string} identity - Target identity
+   * @param {bigint} key - Metadata key to remove
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IRemoveCustomMetadataData>>} Signed remove metadata action
    */
   @SignMethod
   async removeCustomMetadata({
@@ -325,10 +325,10 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `flushCustomMetadata` action.
    *
-   * @param {string} identity
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IFlushCustomMetadataData>>}
+   * @param {string} identity - Target identity
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IFlushCustomMetadataData>>} Signed flush metadata action
    */
   @SignMethod
   async flushCustomMetadata({
@@ -362,10 +362,10 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `flushUsername` action.
    *
-   * @param {string} username
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IFlushUsernameData>>}
+   * @param {string} username - Username to flush
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IFlushUsernameData>>} Signed flush username action
    */
   @SignMethod
   async flushUsername({
@@ -399,10 +399,10 @@ export class NameService extends BaseService {
   /**
    * Create and sign a `renewUsername` action.
    *
-   * @param {string} username
-   * @param {bigint} nonce
-   * @param {SignedAction<IPayData>=} evvmSignedAction
-   * @returns {Promise<SignedAction<IRenewUsernameData>>}
+   * @param {string} username - Username to renew
+   * @param {bigint} nonce - NameService nonce
+   * @param {SignedAction<IPayData>} [evvmSignedAction] - Optional EVVM signed pay action
+   * @returns {Promise<SignedAction<IRenewUsernameData>>} Signed renewal action
    */
   @SignMethod
   async renewUsername({

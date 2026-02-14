@@ -18,7 +18,7 @@ export interface ISerializableSignedAction<T> {
 /**
  * Signed EVVM action, result of a function call of a BaseService.
  * Contains all information needed to execute the transaction anywhere.
- * Can be serialized to JSON using JSON.stringify() or with SignedAction.toJSON()
+ * Can be serialized to JSON using JSON.stringify() or with SignedAction.toJSON().
  */
 export class SignedAction<T extends IBaseDataSchema> {
   service: BaseService;
