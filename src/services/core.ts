@@ -29,7 +29,7 @@ type ToData =
  * contains the serialized data and signature necessary to execute the
  * corresponding contract call.
  */
-export class EVVM extends BaseService {
+export class Core extends BaseService {
   constructor(props: Omit<IBaseServiceProps, "abi">) {
     super({ ...props, abi: EvvmABI });
   }
@@ -93,7 +93,7 @@ export class EVVM extends BaseService {
     const functionName = "pay";
 
     if (toAddress != zeroAddress && toIdentity != "")
-      throw new Error("Can't call EVVM.pay with both toAddress and toIdentity");
+      throw new Error("Can't call Core.pay with both toAddress and toIdentity");
 
     const hashPayload = this.buildHashPayload(functionName, {
       to_address: toAddress,

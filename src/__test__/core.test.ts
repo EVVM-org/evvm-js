@@ -1,53 +1,18 @@
 import { describe, it, expect } from "bun:test";
-import type { HexString, ISigner } from "../types";
-import { EVVM } from "../services";
+import { Core } from "../services";
 import { zeroAddress } from "viem";
+import { getFakeSigner } from "./fixtures/fakeSigner";
 
-class FakeSigner implements ISigner {
-  address = "0x2222222222222222222222222222222222222222" as HexString;
-  _chainId = 1;
-
-  getChainId(): Promise<number> {
-    return Promise.resolve(this._chainId);
-  }
-
-  switchChain(chainId: number): Promise<void> {
-    this._chainId = chainId;
-    return Promise.resolve();
-  }
-
-  async signMessage(message: string) {
-    return `signed(${message})`;
-  }
-
-  async readContract({ abi, address, functionName }: any): Promise<any> {
-    if (functionName === "getEvvmID") return 777n;
-    return null;
-  }
-
-  writeContract(args: any): Promise<HexString> {
-    return Promise.resolve("0xdeadbeef" as HexString);
-  }
-
-  signGenericEvvmMessage(
-    evvmId: bigint,
-    functionName: string,
-    inputs: string,
-  ): Promise<string> {
-    return Promise.resolve(`signed(${evvmId},${functionName},${inputs})`);
-  }
-}
-
-describe("EVVM service", () => {
+describe("Core service", () => {
   it("pay builds SignedAction for address recipient", async () => {
-    const signer = new FakeSigner();
-    const evvm = new EVVM({
+    const signer = getFakeSigner();
+    const core = new Core({
       signer: signer as any,
       address: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
       chainId: 1,
     });
 
-    const sa = await evvm.pay({
+    const sa = await core.pay({
       toAddress: "0x1111111111111111111111111111111111111111",
       tokenAddress: "0x2222222222222222222222222222222222222222",
       amount: 100n,
@@ -67,14 +32,14 @@ describe("EVVM service", () => {
   });
   //
   it("pay builds SignedAction for identity recipient", async () => {
-    const signer = new FakeSigner();
-    const evvm = new EVVM({
+    const signer = getFakeSigner();
+    const core = new Core({
       signer: signer as any,
       address: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
       chainId: 1,
     });
 
-    const sa = await evvm.pay({
+    const sa = await core.pay({
       toIdentity: "alice",
       tokenAddress: "0x2222222222222222222222222222222222222222",
       amount: 50n,
@@ -90,15 +55,15 @@ describe("EVVM service", () => {
   });
 
   it("pay throws an error if both toAddress and toIdentity are defined", async () => {
-    const signer = new FakeSigner();
-    const evvm = new EVVM({
+    const signer = getFakeSigner();
+    const core = new Core({
       signer: signer as any,
       address: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
       chainId: 1,
     });
 
     expect(
-      evvm.pay({
+      core.pay({
         toAddress: "0x2222222222222222222222222222222222222222",
         toIdentity: "alice",
         tokenAddress: "0x2222222222222222222222222222222222222222",
@@ -108,13 +73,13 @@ describe("EVVM service", () => {
         isAsyncExec: true,
       }),
     ).rejects.toThrow(
-      /Can\'t call EVVM.pay with both toAddress and toIdentity/,
+      /Can\'t call Core.pay with both toAddress and toIdentity/,
     );
   });
 
   it("dispersePay builds SignedAction with hashed toData mapping", async () => {
-    const signer = new FakeSigner();
-    const evvm = new EVVM({
+    const signer = getFakeSigner();
+    const core = new Core({
       signer: signer as any,
       address: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
       chainId: 1,
@@ -133,7 +98,7 @@ describe("EVVM service", () => {
       },
     ];
 
-    const sa = await evvm.dispersePay({
+    const sa = await core.dispersePay({
       toData: toData as any,
       tokenAddress: "0x2222222222222222222222222222222222222222",
       amount: 3n,
@@ -156,8 +121,8 @@ describe("EVVM service", () => {
   });
 
   it("dispersePay throws an error if any toData element has both toAddress and toIdentity", async () => {
-    const signer = new FakeSigner();
-    const evvm = new EVVM({
+    const signer = getFakeSigner();
+    const core = new Core({
       signer: signer as any,
       address: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
       chainId: 1,
@@ -178,7 +143,7 @@ describe("EVVM service", () => {
     ];
 
     expect(
-      evvm.dispersePay({
+      core.dispersePay({
         toData: toData as any,
         tokenAddress: "0x2222222222222222222222222222222222222222",
         amount: 3n,

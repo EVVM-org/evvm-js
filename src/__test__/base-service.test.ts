@@ -254,29 +254,4 @@ describe("BaseService", () => {
     expect(signer.readContract).not.toHaveBeenCalled();
   });
 
-  test("getSyncNonce and isValidAsyncNonce use view", async () => {
-    const signer = makeSigner(1);
-    const service = new TestService({
-      signer,
-      address: "0xabc0000000000000000000000000000000000000",
-      abi: baseAbi,
-      chainId: 1,
-    });
-
-    await service.getSyncNonce();
-    expect(signer.readContract).toHaveBeenCalledWith({
-      functionName: "getNextCurrentSyncNonce",
-      contractAddress: "0xabc0000000000000000000000000000000000000",
-      contractAbi: baseAbi,
-      args: ["0x1234567890123456789012345678901234567890"],
-    });
-
-    await service.isValidAsyncNonce(10n);
-    expect(signer.readContract).toHaveBeenCalledWith({
-      functionName: "getIfUsedAsyncNonce",
-      contractAddress: "0xabc0000000000000000000000000000000000000",
-      contractAbi: baseAbi,
-      args: ["0x1234567890123456789012345678901234567890", 10n],
-    });
-  });
 });

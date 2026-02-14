@@ -1,47 +1,12 @@
 import { describe, it, expect, beforeEach } from "bun:test";
 import { Staking } from "@/services";
-import type { HexString, ISigner } from "@/types";
-
-class FakeSigner implements ISigner {
-  address = "0x3333333333333333333333333333333333333333" as HexString;
-  _chainId = 1;
-
-  getChainId(): Promise<number> {
-    return Promise.resolve(this._chainId);
-  }
-
-  switchChain(chainId: number): Promise<void> {
-    this._chainId = chainId;
-    return Promise.resolve();
-  }
-
-  async signMessage(message: string) {
-    return `signed(${message})`;
-  }
-
-  async readContract({ abi, address, functionName }: any): Promise<any> {
-    if (functionName === "getEvvmID") return 777n;
-    return null;
-  }
-
-  writeContract(args: any): Promise<HexString> {
-    return Promise.resolve("0xdeadbeef" as HexString);
-  }
-
-  signGenericEvvmMessage(
-    evvmId: bigint,
-    functionName: string,
-    inputs: string,
-  ): Promise<string> {
-    return Promise.resolve(`signed(${evvmId},${functionName},${inputs})`);
-  }
-}
+import { getFakeSigner } from "./fixtures/fakeSigner";
 
 let signer: any;
 let svc: Staking;
 
 beforeEach(() => {
-  signer = new FakeSigner();
+  signer = getFakeSigner();
   svc = new Staking({
     signer,
     address: "0xSTAKINGADDRESS000000000000000000000000",
