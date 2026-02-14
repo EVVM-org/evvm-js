@@ -138,23 +138,6 @@ export abstract class BaseService {
     const evvmId = this.evvmId || (await this.view<bigint>("getEvvmID"));
     return evvmId;
   }
-
-  /**
-   * Returns a valid Sync nonce for the given service
-   */
-  async getSyncNonce(): Promise<bigint> {
-    return this.view<bigint>("getNextCurrentSyncNonce", [this.signer.address]);
-  }
-
-  /**
-   * Used to assert a given async nonce hasn't been used
-   */
-  async isValidAsyncNonce(nonce: bigint): Promise<boolean> {
-    return this.view<boolean>("getIfUsedAsyncNonce", [
-      this.signer.address,
-      nonce,
-    ]);
-  }
 }
 
 /**

@@ -35,6 +35,23 @@ export class EVVM extends BaseService {
   }
 
   /**
+   * Returns a valid Sync nonce
+   */
+  async getSyncNonce(): Promise<bigint> {
+    return this.view<bigint>("getNextCurrentSyncNonce", [this.signer.address]);
+  }
+
+  /**
+   * Used to assert a given async nonce hasn't been used
+   */
+  async isValidAsyncNonce(nonce: bigint): Promise<boolean> {
+    return this.view<boolean>("getIfUsedAsyncNonce", [
+      this.signer.address,
+      nonce,
+    ]);
+  }
+
+  /**
    * Create and sign a `pay` action.
    *
    * Builds the EIP-191 message for the `pay` entrypoint and signs it using
@@ -42,7 +59,8 @@ export class EVVM extends BaseService {
    * required to execute the `pay` call on-chain (serialized args and
    * signature).
    *
-   * @param {HexString | string} to - Recipient address (0x...) or identity string
+   * @param {HexString} toAddresss - Recipient address (0x...)
+   * @param {string} toIdentity - Recipient address (identity)
    * @param {HexString} tokenAddress - Token contract address used for payment
    * @param {bigint} amount - Amount to transfer
    * @param {bigint} priorityFee - Priority fee to attach to the EVVM execution
