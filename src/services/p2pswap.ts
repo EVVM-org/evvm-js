@@ -166,7 +166,6 @@ export class P2PSwap extends BaseService {
     const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
     const signature = await this.signer.signMessage(message);
 
-    // here, functionName is different from the one used in buildHashPayload
     return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
       metadata: {

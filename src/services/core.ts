@@ -101,7 +101,6 @@ export class Core extends BaseService {
       token: tokenAddress,
       amount,
       priorityFee,
-      executor,
     });
 
     const message = this.buildMessageToSign(
@@ -179,7 +178,6 @@ export class Core extends BaseService {
       token: tokenAddress,
       amount,
       priorityFee,
-      executor,
     });
     const message = this.buildMessageToSign(
       evvmId,
