@@ -6,7 +6,7 @@ import {
   type IPayData,
 } from "@/types";
 import { BaseService, SignMethod } from "./lib";
-import { EvvmABI } from "@/abi";
+import { CoreABI } from "@/abi";
 import { SignedAction } from "./lib";
 
 type ToData =
@@ -31,7 +31,7 @@ type ToData =
  */
 export class Core extends BaseService {
   constructor(props: Omit<IBaseServiceProps, "abi">) {
-    super({ ...props, abi: EvvmABI });
+    super({ ...props, abi: CoreABI });
   }
 
   /**
@@ -66,7 +66,7 @@ export class Core extends BaseService {
    * @param {bigint} priorityFee - Priority fee to attach to the EVVM execution
    * @param {bigint} nonce - EVVM nonce for this action
    * @param {boolean} isAsyncExec - Async execution
-   * @param {HexString} [executor] - Optional executor address
+   * @param {HexString} [senderExecutor] - Optional senderExecutor address
    * @returns {Promise<SignedAction<IPayData>>} Signed action ready for execution
    */
   @SignMethod
@@ -76,7 +76,7 @@ export class Core extends BaseService {
     tokenAddress,
     amount,
     priorityFee,
-    executor = zeroAddress,
+    senderExecutor = zeroAddress,
     nonce,
     isAsyncExec,
   }: {
@@ -87,7 +87,7 @@ export class Core extends BaseService {
     priorityFee: bigint;
     nonce: bigint;
     isAsyncExec: boolean;
-    executor?: HexString;
+    senderExecutor?: HexString;
   }): Promise<SignedAction<IPayData>> {
     const evvmId = await this.getEvvmID();
     const functionName = "pay";
@@ -118,7 +118,7 @@ export class Core extends BaseService {
       token: tokenAddress,
       amount,
       priorityFee,
-      executor,
+      senderExecutor,
       nonce,
       isAsyncExec,
       signature,
@@ -137,7 +137,7 @@ export class Core extends BaseService {
    * @param {bigint} priorityFee - Priority fee
    * @param {bigint} nonce - EVVM nonce
    * @param {boolean} isAsyncExec - Async execution
-   * @param {HexString} executor - Executor address
+   * @param {HexString} senderExecutor - senderExecutor address
    * @returns {Promise<SignedAction<IDispersePayData>>} Signed disperse action
    */
   @SignMethod
@@ -146,7 +146,7 @@ export class Core extends BaseService {
     tokenAddress,
     amount,
     priorityFee,
-    executor = zeroAddress,
+    senderExecutor = zeroAddress,
     nonce,
     isAsyncExec,
   }: {
@@ -154,7 +154,7 @@ export class Core extends BaseService {
     tokenAddress: HexString;
     amount: bigint;
     priorityFee: bigint;
-    executor: HexString;
+    senderExecutor: HexString;
     nonce: bigint;
     isAsyncExec: boolean;
   }): Promise<SignedAction<IDispersePayData>> {
@@ -197,7 +197,7 @@ export class Core extends BaseService {
       token: tokenAddress,
       amount,
       priorityFee,
-      executor,
+      senderExecutor,
       nonce,
       isAsyncExec,
       signature,

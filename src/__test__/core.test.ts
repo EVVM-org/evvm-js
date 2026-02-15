@@ -105,7 +105,7 @@ describe("Core service", () => {
       priorityFee: 0n,
       nonce: 5n,
       isAsyncExec: false,
-      executor: "0x3333333333333333333333333333333333333333",
+      senderExecutor: "0x3333333333333333333333333333333333333333",
     });
 
     expect(sa.functionName).toBe("dispersePay");
@@ -150,7 +150,7 @@ describe("Core service", () => {
         priorityFee: 0n,
         nonce: 5n,
         isAsyncExec: false,
-        executor: "0x3333333333333333333333333333333333333333",
+        senderExecutor: "0x3333333333333333333333333333333333333333",
       }),
     ).rejects.toThrow(/both toAddress and toIdentity/);
   });

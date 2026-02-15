@@ -3,6 +3,7 @@ import type { HexString } from "./hexstring.type";
 export interface IMakeOrderData {
   user: HexString;
   metadata: {
+    originExecutor: HexString;
     nonce: bigint;
     tokenA: HexString;
     tokenB: HexString;
@@ -18,6 +19,7 @@ export interface IMakeOrderData {
 export interface ICancelOrderData {
   user: HexString;
   metadata: {
+    originExecutor: HexString;
     nonce: bigint;
     tokenA: HexString;
     tokenB: HexString;
@@ -32,6 +34,7 @@ export interface ICancelOrderData {
 export interface IDispatchOrderData {
   user: HexString;
   metadata: {
+    originExecutor: HexString;
     nonce: bigint;
     tokenA: HexString;
     tokenB: HexString;

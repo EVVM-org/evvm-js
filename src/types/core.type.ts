@@ -7,7 +7,7 @@ export interface IPayData {
   token: HexString;
   amount: bigint;
   priorityFee?: bigint;
-  executor: HexString;
+  senderExecutor: HexString;
   nonce: bigint;
   isAsyncExec: boolean;
   signature: string;
@@ -23,7 +23,7 @@ export interface IDispersePayData {
   token: HexString;
   amount: bigint;
   priorityFee?: bigint;
-  executor: HexString;
+  senderExecutor: HexString;
   nonce: bigint;
   isAsyncExec: boolean;
   signature: string;

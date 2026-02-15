@@ -11,9 +11,11 @@ import type {
   IRenewUsernameData,
   IWithdrawOfferData,
   IBaseServiceProps,
+  HexString,
 } from "@/types";
 import { BaseService, SignedAction, SignMethod } from "./lib";
 import { NameServiceABI } from "@/abi";
+import { zeroAddress } from "viem";
 
 /**
  * NameService wrapper.
@@ -43,12 +45,14 @@ export class NameService extends BaseService {
     username,
     expirationDate,
     amount,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     expirationDate: bigint;
     amount: bigint;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IMakeOfferData>> {
@@ -68,6 +72,7 @@ export class NameService extends BaseService {
       username,
       expirationDate,
       amount,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -89,11 +94,13 @@ export class NameService extends BaseService {
   async withdrawOffer({
     username,
     offerID,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     offerID: bigint;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IWithdrawOfferData>> {
@@ -110,6 +117,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       username,
       offerID,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -131,11 +139,13 @@ export class NameService extends BaseService {
   async acceptOffer({
     username,
     offerID,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     offerID: bigint;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IAcceptOfferData>> {
@@ -152,6 +162,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       username,
       offerID,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -171,10 +182,12 @@ export class NameService extends BaseService {
   @SignMethod
   async preRegistrationUsername({
     hashPreRegisteredUsername,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     hashPreRegisteredUsername: string;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPreRegistrationUsernameData>> {
@@ -189,6 +202,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "preRegistrationUsername", {
       user: this.signer.address,
       hashPreRegisteredUsername,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -210,11 +224,13 @@ export class NameService extends BaseService {
   async registrationUsername({
     username,
     lockNumber,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     lockNumber: bigint;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IRegistrationUsernameData>> {
@@ -231,6 +247,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       username,
       lockNumber,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -252,11 +269,13 @@ export class NameService extends BaseService {
   async addCustomMetadata({
     identity,
     value,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     identity: string;
     value: string;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IAddCustomMetadataData>> {
@@ -272,6 +291,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       identity,
       value,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -293,11 +313,13 @@ export class NameService extends BaseService {
   async removeCustomMetadata({
     identity,
     key,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     identity: string;
     key: bigint;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IRemoveCustomMetadataData>> {
@@ -314,6 +336,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       identity,
       key,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -333,10 +356,12 @@ export class NameService extends BaseService {
   @SignMethod
   async flushCustomMetadata({
     identity,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     identity: string;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IFlushCustomMetadataData>> {
@@ -351,6 +376,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "flushCustomMetadata", {
       user: this.signer.address,
       identity,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -370,10 +396,12 @@ export class NameService extends BaseService {
   @SignMethod
   async flushUsername({
     username,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IFlushUsernameData>> {
@@ -388,6 +416,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "flushUsername", {
       user: this.signer.address,
       username,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
@@ -407,10 +436,12 @@ export class NameService extends BaseService {
   @SignMethod
   async renewUsername({
     username,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IRenewUsernameData>> {
@@ -425,6 +456,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "renewUsername", {
       user: this.signer.address,
       username,
+      originExecutor,
       nonce,
       signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,

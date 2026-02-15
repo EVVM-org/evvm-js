@@ -8,6 +8,7 @@ import type {
 } from "@/types";
 import { BaseService, SignedAction, SignMethod } from "./lib";
 import { StakingABI } from "@/abi";
+import { zeroAddress } from "viem";
 
 /**
  * Staking service wrapper.
@@ -33,10 +34,12 @@ export class Staking extends BaseService {
   @SignMethod
   async presaleStaking({
     isStaking,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     isStaking: boolean;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPresaleStakingData>> {
@@ -65,9 +68,10 @@ export class Staking extends BaseService {
     return new SignedAction(this, evvmId, "presaleStaking", {
       user: this.signer.address,
       isStaking,
+      originExecutor,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
       noncePay: evvmSignedAction?.data.nonce,
       signaturePay: evvmSignedAction?.data.signature,
     });
@@ -86,11 +90,13 @@ export class Staking extends BaseService {
   async publicStaking({
     isStaking,
     amountOfStaking,
+    originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     isStaking: boolean;
     amountOfStaking: bigint;
+    originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<IPublicStakingData>> {
@@ -108,9 +114,10 @@ export class Staking extends BaseService {
       user: this.signer.address,
       isStaking,
       amountOfStaking,
+      originExecutor,
       nonce,
       signature,
-      priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
       noncePay: evvmSignedAction?.data.nonce,
       signaturePay: evvmSignedAction?.data.signature,
     });
