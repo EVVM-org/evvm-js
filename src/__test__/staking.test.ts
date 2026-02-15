@@ -44,6 +44,6 @@ describe("Staking service", () => {
       evvmSignedAction,
     } as any);
     expect(r.functionName).toBe("goldenStaking");
-    expect(typeof r.data.signatureEvvm).toBe("string");
+    expect(typeof r.data.signaturePay).toBe("string");
   });
 });

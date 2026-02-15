@@ -72,9 +72,9 @@ export class P2PSwap extends BaseService {
         amountB,
       },
       signature,
-      priorityFeeEvvm: evvmSignedAction.data.priorityFee,
-      nonceEvvm: evvmSignedAction.data.nonce,
-      signatureEvvm: evvmSignedAction.data.signature,
+      priorityFeePay: evvmSignedAction.data.priorityFee,
+      noncePay: evvmSignedAction.data.nonce,
+      signaturePay: evvmSignedAction.data.signature,
     });
   }
 
@@ -122,9 +122,9 @@ export class P2PSwap extends BaseService {
         orderId,
         signature,
       },
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -176,9 +176,9 @@ export class P2PSwap extends BaseService {
         amountOfTokenBToFill: amountOfTokenBToFill,
         signature,
       },
-      priorityFeeEvvm: evvmSignedAction.data.priorityFee,
-      nonceEvvm: evvmSignedAction.data.nonce,
-      signatureEvvm: evvmSignedAction.data.signature,
+      priorityFeePay: evvmSignedAction.data.priorityFee,
+      noncePay: evvmSignedAction.data.nonce,
+      signaturePay: evvmSignedAction.data.signature,
     });
   }
 
@@ -234,9 +234,9 @@ export class P2PSwap extends BaseService {
         signature,
       },
       maxFillFixedFee,
-      priorityFeeEvvm: evvmSignedAction.data.priorityFee,
-      nonceEvvm: evvmSignedAction.data.nonce,
-      signatureEvvm: evvmSignedAction.data.signature,
+      priorityFeePay: evvmSignedAction.data.priorityFee,
+      noncePay: evvmSignedAction.data.nonce,
+      signaturePay: evvmSignedAction.data.signature,
     });
   }
 }

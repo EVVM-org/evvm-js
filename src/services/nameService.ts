@@ -70,9 +70,9 @@ export class NameService extends BaseService {
       amount,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -112,9 +112,9 @@ export class NameService extends BaseService {
       offerID,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -154,9 +154,9 @@ export class NameService extends BaseService {
       offerID,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -191,9 +191,9 @@ export class NameService extends BaseService {
       hashPreRegisteredUsername,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -233,9 +233,9 @@ export class NameService extends BaseService {
       lockNumber,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -274,9 +274,9 @@ export class NameService extends BaseService {
       value,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -316,9 +316,9 @@ export class NameService extends BaseService {
       key,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -353,9 +353,9 @@ export class NameService extends BaseService {
       identity,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -390,9 +390,9 @@ export class NameService extends BaseService {
       username,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -427,9 +427,9 @@ export class NameService extends BaseService {
       username,
       nonce,
       signature,
-      priorityFeeEvvm: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      priorityFeePay: evvmSignedAction?.data.priorityFee,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 }

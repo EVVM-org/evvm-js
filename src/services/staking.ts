@@ -68,8 +68,8 @@ export class Staking extends BaseService {
       nonce,
       signature,
       priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -111,8 +111,8 @@ export class Staking extends BaseService {
       nonce,
       signature,
       priorityFee_EVVM: evvmSignedAction?.data.priorityFee,
-      nonceEvvm: evvmSignedAction?.data.nonce,
-      signatureEvvm: evvmSignedAction?.data.signature,
+      noncePay: evvmSignedAction?.data.nonce,
+      signaturePay: evvmSignedAction?.data.signature,
     });
   }
 
@@ -146,7 +146,7 @@ export class Staking extends BaseService {
     return new SignedAction(this, evvmId, "goldenStaking", {
       isStaking,
       amountOfStaking,
-      signatureEvvm: userSignature,
+      signaturePay: userSignature,
     });
   }
 }

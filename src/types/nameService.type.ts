@@ -6,9 +6,9 @@ export interface IAcceptOfferData {
   offerID: bigint;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IAddCustomMetadataData {
@@ -17,9 +17,9 @@ export interface IAddCustomMetadataData {
   value: string;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IFlushCustomMetadataData {
@@ -27,9 +27,9 @@ export interface IFlushCustomMetadataData {
   identity: string;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IFlushUsernameData {
@@ -37,9 +37,9 @@ export interface IFlushUsernameData {
   username: string;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IMakeOfferData {
@@ -49,9 +49,9 @@ export interface IMakeOfferData {
   expirationDate: bigint;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IPreRegistrationUsernameData {
@@ -59,9 +59,9 @@ export interface IPreRegistrationUsernameData {
   hashPreRegisteredUsername: string;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IRegistrationUsernameData {
@@ -70,9 +70,9 @@ export interface IRegistrationUsernameData {
   lockNumber: bigint;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IRemoveCustomMetadataData {
@@ -81,9 +81,9 @@ export interface IRemoveCustomMetadataData {
   key: bigint;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IRenewUsernameData {
@@ -91,9 +91,9 @@ export interface IRenewUsernameData {
   username: string;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IWithdrawOfferData {
@@ -102,7 +102,7 @@ export interface IWithdrawOfferData {
   offerID: bigint;
   nonce: bigint;
   signature: string;
-  priorityFeeEvvm?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  priorityFeePay?: bigint;
+  noncePay?: bigint;
+  signaturePay?: string;
 }

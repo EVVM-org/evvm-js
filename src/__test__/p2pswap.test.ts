@@ -37,7 +37,7 @@ describe("P2PSwap service", () => {
     expect(r.data.user).toBe(signer.address);
     expect(typeof r.data.metadata).toBe("object");
     expect(r.data.metadata.nonce).toBe(1n);
-    expect(typeof r.data.signatureEvvm).toBe("string");
+    expect(typeof r.data.signaturePay).toBe("string");
   });
 
   it("cancelOrder returns SignedAction with expected fields", async () => {
@@ -71,7 +71,7 @@ describe("P2PSwap service", () => {
 
     expect(r.functionName).toBe("dispatchOrder_fillPropotionalFee");
     expect(r.data.user).toBe(signer.address);
-    expect(typeof r.data.signatureEvvm).toBe("string");
+    expect(typeof r.data.signaturePay).toBe("string");
   });
 
   it("dispatchOrder fill fixed fee includes maxFillFixedFee when present", async () => {
@@ -95,6 +95,6 @@ describe("P2PSwap service", () => {
 
     expect(r.functionName).toBe("dispatchOrder_fillFixedFee");
     expect(r.data.maxFillFixedFee).toBeDefined();
-    expect(typeof r.data.signatureEvvm).toBe("string");
+    expect(typeof r.data.signaturePay).toBe("string");
   });
 });

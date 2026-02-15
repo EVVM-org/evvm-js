@@ -6,8 +6,8 @@ export interface IPresaleStakingData {
   nonce: bigint;
   signature: string;
   priorityFee_EVVM?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IPublicStakingData {
@@ -17,12 +17,12 @@ export interface IPublicStakingData {
   nonce: bigint;
   signature: string;
   priorityFee_EVVM?: bigint;
-  nonceEvvm?: bigint;
-  signatureEvvm?: string;
+  noncePay?: bigint;
+  signaturePay?: string;
 }
 
 export interface IGoldenStakingData {
   isStaking: boolean;
   amountOfStaking: bigint;
-  signatureEvvm?: string;
+  signaturePay?: string;
 }
