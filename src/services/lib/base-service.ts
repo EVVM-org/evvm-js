@@ -133,7 +133,11 @@ export abstract class BaseService {
     nonce: bigint,
     isAsyncExec: boolean,
   ): string {
-    return `${evvmId.toString()},${this.address},${hashPayload},${executor},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
+    // ensure addresses are normalized to lowercase for deterministic signing
+    const serviceAddress = this.address.toLowerCase();
+    const executorAddress = executor?.toLowerCase();
+
+    return `${evvmId.toString()},${serviceAddress},${hashPayload},${executorAddress},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
   }
 
   /**

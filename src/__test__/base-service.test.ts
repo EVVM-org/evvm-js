@@ -230,7 +230,7 @@ describe("BaseService", () => {
     const signer = makeSigner(1);
     const service = new TestService({
       signer,
-      address: "0xabc0000000000000000000000000000000000000",
+      address: "0xABC0000000000000000000000000000000000000",
       abi: baseAbi,
       chainId: 1,
     });
