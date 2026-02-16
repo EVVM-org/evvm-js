@@ -42,7 +42,8 @@ describe("NameService service", () => {
 
   it("registrationUsername & preRegistrationUsername produce SignedAction", async () => {
     const pre = await svc.preRegistrationUsername({
-      hashPreRegisteredUsername: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+      hashPreRegisteredUsername:
+        "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
       nonce: 3n,
       user: signer.address,
     } as any);

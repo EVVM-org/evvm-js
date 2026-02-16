@@ -235,7 +235,15 @@ describe("BaseService", () => {
       chainId: 1,
     });
 
-    expect(service.buildMessageToSign(5n, "0xdeadbeef", "0x0000000000000000000000000000000000000000", 9n, true)).toBe(
+    expect(
+      service.buildMessageToSign(
+        5n,
+        "0xdeadbeef",
+        "0x0000000000000000000000000000000000000000",
+        9n,
+        true,
+      ),
+    ).toBe(
       "5,0xabc0000000000000000000000000000000000000,0xdeadbeef,0x0000000000000000000000000000000000000000,9,true",
     );
   });
@@ -253,5 +261,4 @@ describe("BaseService", () => {
     await expect(service.getEvvmID()).resolves.toBe(7n);
     expect(signer.readContract).not.toHaveBeenCalled();
   });
-
 });
