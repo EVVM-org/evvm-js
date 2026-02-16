@@ -64,7 +64,13 @@ export class NameService extends BaseService {
       amount,
       expirationDate,
     });
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "makeOffer", {
@@ -106,10 +112,18 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IWithdrawOfferData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string =
-      `${username},` + `${offerID.toString()},` + `${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("withdrawOffer", {
+      username,
+      offerID,
+    });
 
-    const message = `${evvmId},withdrawOffer,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -151,10 +165,18 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IAcceptOfferData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string =
-      `${username},` + `${offerID.toString()},` + `${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("acceptOffer", {
+      username,
+      offerID,
+    });
 
-    const message = `${evvmId},acceptOffer,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -193,9 +215,17 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IPreRegistrationUsernameData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string = `${hashPreRegisteredUsername},${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("preRegistrationUsername", {
+      hashPreRegisteredUsername,
+    });
 
-    const message = `${evvmId},preRegistrationUsername,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -236,10 +266,18 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IRegistrationUsernameData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string =
-      `${username},` + `${lockNumber.toString()},` + `${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("registrationUsername", {
+      username,
+      lockNumber,
+    });
 
-    const message = `${evvmId},registrationUsername,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -281,9 +319,18 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IAddCustomMetadataData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string = `${identity},${value},${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("addCustomMetadata", {
+      identity,
+      value,
+    });
 
-    const message = `${evvmId},addCustomMetadata,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -325,10 +372,18 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IRemoveCustomMetadataData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string =
-      `${identity},` + `${key.toString()},` + `${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("removeCustomMetadata", {
+      identity,
+      key,
+    });
 
-    const message = `${evvmId},removeCustomMetadata,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -367,9 +422,17 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IFlushCustomMetadataData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string = `${identity},${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("flushCustomMetadata", {
+      identity,
+    });
 
-    const message = `${evvmId},flushCustomMetadata,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -407,9 +470,17 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IFlushUsernameData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string = `${username},${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("flushUsername", {
+      username,
+    });
 
-    const message = `${evvmId},flushUsername,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 
@@ -447,9 +518,17 @@ export class NameService extends BaseService {
   }): Promise<SignedAction<IRenewUsernameData>> {
     const evvmId = await this.getEvvmID();
 
-    const inputs: string = `${username},${nonce.toString()}`;
+    const hashPayload = this.buildHashPayload("renewUsername", {
+      username,
+    });
 
-    const message = `${evvmId},renewUsername,${inputs}`;
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
 
     const signature = await this.signer.signMessage(message);
 

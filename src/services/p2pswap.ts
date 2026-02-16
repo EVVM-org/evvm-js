@@ -62,7 +62,13 @@ export class P2PSwap extends BaseService {
       amountA,
       amountB,
     });
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, functionName, {
@@ -116,7 +122,13 @@ export class P2PSwap extends BaseService {
       tokenB,
       orderId,
     });
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, functionName, {
@@ -172,7 +184,13 @@ export class P2PSwap extends BaseService {
       tokenB,
       orderId,
     });
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, functionName, {
@@ -232,7 +250,13 @@ export class P2PSwap extends BaseService {
       tokenB,
       orderId,
     });
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, functionName, {

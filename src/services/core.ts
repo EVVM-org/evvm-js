@@ -106,6 +106,7 @@ export class Core extends BaseService {
     const message = this.buildMessageToSign(
       evvmId,
       hashPayload,
+      senderExecutor,
       nonce,
       isAsyncExec,
     );
@@ -182,6 +183,7 @@ export class Core extends BaseService {
     const message = this.buildMessageToSign(
       evvmId,
       hashPayload,
+      senderExecutor,
       nonce,
       isAsyncExec,
     );

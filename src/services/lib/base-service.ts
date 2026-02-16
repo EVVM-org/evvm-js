@@ -6,7 +6,12 @@ import type {
   ISigner,
 } from "@/types";
 import type { IBaseDataSchema, SignedAction } from "./signed-action";
-import { encodeAbiParameters, keccak256, type AbiParameter } from "viem";
+import {
+  encodeAbiParameters,
+  keccak256,
+  zeroAddress,
+  type AbiParameter,
+} from "viem";
 
 export abstract class BaseService {
   /**
@@ -119,16 +124,16 @@ export abstract class BaseService {
 
   /**
    * Builds a message of the form:
-   * evvmId,serviceAddress,hashPayload,nonce,isAsyncExec
+   * evvmId,serviceAddress,hashPayload,executor,nonce,isAsyncExec
    */
   buildMessageToSign(
     evvmId: bigint,
     hashPayload: HexString,
+    executor: HexString = zeroAddress,
     nonce: bigint,
     isAsyncExec: boolean,
   ): string {
-    // evvmId,serviceAddress,hashPayload,executor(to be implemented),nonce,isAsyncExec
-    return `${evvmId.toString()},${this.address},${hashPayload},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
+    return `${evvmId.toString()},${this.address},${hashPayload},${executor},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
   }
 
   /**

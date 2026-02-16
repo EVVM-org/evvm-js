@@ -62,7 +62,13 @@ export class Staking extends BaseService {
         ],
       },
     );
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "presaleStaking", {
@@ -107,7 +113,13 @@ export class Staking extends BaseService {
       isStaking,
       amountOfStaking,
     });
-    const message = this.buildMessageToSign(evvmId, hashPayload, nonce, true);
+    const message = this.buildMessageToSign(
+      evvmId,
+      hashPayload,
+      originExecutor,
+      nonce,
+      true,
+    );
     const signature = await this.signer.signMessage(message);
 
     return new SignedAction(this, evvmId, "publicStaking", {
