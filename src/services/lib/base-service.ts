@@ -135,7 +135,7 @@ export abstract class BaseService {
   ): string {
     // ensure addresses are normalized to lowercase for deterministic signing
     const serviceAddress = this.address.toLowerCase();
-    const executorAddress = executor?.toLowerCase();
+    const executorAddress = executor.toLowerCase();
 
     return `${evvmId.toString()},${serviceAddress},${hashPayload},${executorAddress},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
   }
