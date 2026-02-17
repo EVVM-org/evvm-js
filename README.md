@@ -61,6 +61,7 @@ const signedAction = await core.pay({
   amount: 100n, // Use BigInt for amounts
   priorityFee: 0n,
   nonce: 1n,
+  isAsyncExec: false,
 });
 
 // 4. Execute the signed action
