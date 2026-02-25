@@ -52,6 +52,13 @@ export class Core extends BaseService {
   }
 
   /**
+   * Returns the balance of the given user
+   */
+  async getBalance(user: HexString, token: HexString): Promise<number> {
+    return this.view<number>("getBalance", [user, token]);
+  }
+
+  /**
    * Create and sign a `pay` action.
    *
    * Builds the EIP-191 message for the `pay` entrypoint and signs it using
