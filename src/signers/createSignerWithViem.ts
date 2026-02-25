@@ -5,7 +5,8 @@ import type { IAbi, IAbiFunction, IAbiParameter, ISigner } from "@/types";
 export const createSignerWithViem = async (
   walletClient: WalletClient,
 ): Promise<ISigner> => {
-  const address = walletClient.account?.address;
+  const account = walletClient.account;
+  const address = account?.address;
   if (!address) throw new Error("No address connected");
 
   return {
@@ -18,13 +19,13 @@ export const createSignerWithViem = async (
     },
     async signMessage(message) {
       return walletClient.signMessage({
-        account: address,
+        account,
         message,
       });
     },
     async signGenericEvvmMessage(evvmId, functionName, inputs) {
       return walletClient.signMessage({
-        account: address,
+        account,
         message: `${evvmId},${functionName},${inputs}`,
       });
     },
@@ -39,7 +40,7 @@ export const createSignerWithViem = async (
         abi: contractAbi,
         address: contractAddress,
         chain: walletClient.chain,
-        account: address,
+        account,
         functionName,
         gas: gas ? BigInt(gas) : undefined,
         args: formatArgs(args, contractAbi, functionName),
