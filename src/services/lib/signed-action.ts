@@ -6,6 +6,7 @@ export interface IBaseDataSchema {
 }
 
 export interface ISerializableSignedAction<T> {
+  [key: string]: unknown; // allows compatibility with Record<string, unknown> type
   functionName: string;
   functionAbi: IAbiItem;
   contractAddress: HexString;
