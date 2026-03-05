@@ -40,6 +40,9 @@ export abstract class BaseService {
   protected async view<T = any>(
     functionName: string,
     args?: any[],
+    opts?: {
+      abi: IAbi;
+    },
   ): Promise<T> {
     const activeChain = await this.signer.getChainId();
     // assert the chainId and signer.chainId are correct
@@ -51,7 +54,7 @@ export abstract class BaseService {
     return this.signer.readContract<T>({
       functionName,
       contractAddress: this.address,
-      contractAbi: this.abi,
+      contractAbi: opts?.abi || this.abi,
       args: args || [],
     });
   }
@@ -144,8 +147,23 @@ export abstract class BaseService {
    * Retrieves the evvm ID of the service.
    */
   async getEvvmID(): Promise<bigint> {
-    const evvmId = this.evvmId || (await this.view<bigint>("getEvvmID"));
-    return evvmId;
+    if (this.evvmId !== undefined) {
+      return this.evvmId;
+    }
+
+    this.evvmId = await this.view<bigint>("getEvvmID", [], {
+      abi: [
+        {
+          type: "function",
+          name: "getEvvmID",
+          inputs: [],
+          outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+          stateMutability: "view",
+        },
+      ],
+    });
+
+    return this.evvmId;
   }
 }
 
