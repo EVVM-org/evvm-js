@@ -4,6 +4,7 @@ export interface IAcceptOfferData {
   user: HexString;
   username: string;
   offerID: bigint;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -16,6 +17,7 @@ export interface IAddCustomMetadataData {
   user: HexString;
   identity: string;
   value: string;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -27,6 +29,7 @@ export interface IAddCustomMetadataData {
 export interface IFlushCustomMetadataData {
   user: HexString;
   identity: string;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -38,6 +41,7 @@ export interface IFlushCustomMetadataData {
 export interface IFlushUsernameData {
   user: HexString;
   username: string;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -51,6 +55,7 @@ export interface IMakeOfferData {
   username: string;
   amount: bigint;
   expirationDate: bigint;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -62,6 +67,7 @@ export interface IMakeOfferData {
 export interface IPreRegistrationUsernameData {
   user: HexString;
   hashPreRegisteredUsername: string;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -74,6 +80,7 @@ export interface IRegistrationUsernameData {
   user: HexString;
   username: string;
   lockNumber: bigint;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -86,6 +93,7 @@ export interface IRemoveCustomMetadataData {
   user: HexString;
   identity: string;
   key: bigint;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -97,6 +105,7 @@ export interface IRemoveCustomMetadataData {
 export interface IRenewUsernameData {
   user: HexString;
   username: string;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;
@@ -109,6 +118,7 @@ export interface IWithdrawOfferData {
   user: HexString;
   username: string;
   offerID: bigint;
+  senderExecutor: HexString;
   originExecutor: HexString;
   nonce: bigint;
   signature: string;

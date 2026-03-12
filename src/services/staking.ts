@@ -34,11 +34,13 @@ export class Staking extends BaseService {
   @SignMethod
   async presaleStaking({
     isStaking,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     isStaking: boolean;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -64,6 +66,7 @@ export class Staking extends BaseService {
     );
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -74,6 +77,7 @@ export class Staking extends BaseService {
     return new SignedAction(this, evvmId, "presaleStaking", {
       user: this.signer.address,
       isStaking,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -96,12 +100,14 @@ export class Staking extends BaseService {
   async publicStaking({
     isStaking,
     amountOfStaking,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     isStaking: boolean;
     amountOfStaking: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -115,6 +121,7 @@ export class Staking extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -126,6 +133,7 @@ export class Staking extends BaseService {
       user: this.signer.address,
       isStaking,
       amountOfStaking,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,

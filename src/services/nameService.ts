@@ -45,6 +45,7 @@ export class NameService extends BaseService {
     username,
     expirationDate,
     amount,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
@@ -52,6 +53,7 @@ export class NameService extends BaseService {
     username: string;
     expirationDate: bigint;
     amount: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -66,6 +68,7 @@ export class NameService extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -78,6 +81,7 @@ export class NameService extends BaseService {
       username,
       expirationDate,
       amount,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -100,12 +104,14 @@ export class NameService extends BaseService {
   async withdrawOffer({
     username,
     offerID,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     offerID: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -119,6 +125,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -131,6 +138,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       username,
       offerID,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -153,12 +161,14 @@ export class NameService extends BaseService {
   async acceptOffer({
     username,
     offerID,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     offerID: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -172,6 +182,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -184,6 +195,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       username,
       offerID,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -204,11 +216,13 @@ export class NameService extends BaseService {
   @SignMethod
   async preRegistrationUsername({
     hashPreRegisteredUsername,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     hashPreRegisteredUsername: string;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -221,6 +235,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -232,6 +247,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "preRegistrationUsername", {
       user: this.signer.address,
       hashPreRegisteredUsername,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -254,12 +270,14 @@ export class NameService extends BaseService {
   async registrationUsername({
     username,
     lockNumber,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
     lockNumber: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -273,6 +291,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -285,6 +304,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       username,
       lockNumber,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -307,12 +327,14 @@ export class NameService extends BaseService {
   async addCustomMetadata({
     identity,
     value,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     identity: string;
     value: string;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -326,6 +348,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -338,6 +361,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       identity,
       value,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -360,12 +384,14 @@ export class NameService extends BaseService {
   async removeCustomMetadata({
     identity,
     key,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     identity: string;
     key: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -379,6 +405,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -391,6 +418,7 @@ export class NameService extends BaseService {
       user: this.signer.address,
       identity,
       key,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -411,11 +439,13 @@ export class NameService extends BaseService {
   @SignMethod
   async flushCustomMetadata({
     identity,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     identity: string;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -428,6 +458,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -439,6 +470,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "flushCustomMetadata", {
       user: this.signer.address,
       identity,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -459,11 +491,13 @@ export class NameService extends BaseService {
   @SignMethod
   async flushUsername({
     username,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -476,6 +510,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -487,6 +522,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "flushUsername", {
       user: this.signer.address,
       username,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,
@@ -507,11 +543,13 @@ export class NameService extends BaseService {
   @SignMethod
   async renewUsername({
     username,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     nonce,
     evvmSignedAction,
   }: {
     username: string;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     nonce: bigint;
     evvmSignedAction?: SignedAction<IPayData>;
@@ -524,6 +562,7 @@ export class NameService extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -535,6 +574,7 @@ export class NameService extends BaseService {
     return new SignedAction(this, evvmId, "renewUsername", {
       user: this.signer.address,
       username,
+      senderExecutor,
       originExecutor,
       nonce,
       signature,

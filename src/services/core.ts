@@ -37,14 +37,14 @@ export class Core extends BaseService {
   /**
    * Returns the next sync nonce.
    */
-  async getSyncNonce(): Promise<bigint> {
+  async getNextCurrentSyncNonce(): Promise<bigint> {
     return this.view<bigint>("getNextCurrentSyncNonce", [this.signer.address]);
   }
 
   /**
    * Checks whether an async nonce has already been used.
    */
-  async isValidAsyncNonce(nonce: bigint): Promise<boolean> {
+  async getIfUsedAsyncNonce(nonce: bigint): Promise<boolean> {
     return this.view<boolean>("getIfUsedAsyncNonce", [
       this.signer.address,
       nonce,
@@ -84,6 +84,7 @@ export class Core extends BaseService {
     amount,
     priorityFee,
     senderExecutor = zeroAddress,
+    originExecutor = zeroAddress,
     nonce,
     isAsyncExec,
   }: {
@@ -95,6 +96,7 @@ export class Core extends BaseService {
     nonce: bigint;
     isAsyncExec: boolean;
     senderExecutor?: HexString;
+    originExecutor?: HexString;
   }): Promise<SignedAction<IPayData>> {
     const evvmId = await this.getEvvmID();
     const functionName = "pay";
@@ -112,8 +114,9 @@ export class Core extends BaseService {
 
     const message = this.buildMessageToSign(
       evvmId,
-      hashPayload,
       senderExecutor,
+      hashPayload,
+      originExecutor,
       nonce,
       isAsyncExec,
     );
@@ -127,6 +130,7 @@ export class Core extends BaseService {
       amount,
       priorityFee,
       senderExecutor,
+      originExecutor,
       nonce,
       isAsyncExec,
       signature,
@@ -155,6 +159,7 @@ export class Core extends BaseService {
     amount,
     priorityFee,
     senderExecutor = zeroAddress,
+    originExecutor = zeroAddress,
     nonce,
     isAsyncExec,
   }: {
@@ -163,6 +168,7 @@ export class Core extends BaseService {
     amount: bigint;
     priorityFee: bigint;
     senderExecutor: HexString;
+    originExecutor: HexString;
     nonce: bigint;
     isAsyncExec: boolean;
   }): Promise<SignedAction<IDispersePayData>> {
@@ -189,8 +195,9 @@ export class Core extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
-      hashPayload,
       senderExecutor,
+      hashPayload,
+      originExecutor,
       nonce,
       isAsyncExec,
     );
@@ -207,6 +214,7 @@ export class Core extends BaseService {
       amount,
       priorityFee,
       senderExecutor,
+      originExecutor,
       nonce,
       isAsyncExec,
       signature,

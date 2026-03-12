@@ -8,6 +8,7 @@ export interface IPayData {
   amount: bigint;
   priorityFee?: bigint;
   senderExecutor: HexString;
+  originExecutor: HexString;
   nonce: bigint;
   isAsyncExec: boolean;
   signature: string;
@@ -24,6 +25,7 @@ export interface IDispersePayData {
   amount: bigint;
   priorityFee?: bigint;
   senderExecutor: HexString;
+  originExecutor: HexString;
   nonce: bigint;
   isAsyncExec: boolean;
   signature: string;

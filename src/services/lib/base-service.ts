@@ -127,20 +127,18 @@ export abstract class BaseService {
 
   /**
    * Builds a message of the form:
-   * evvmId,serviceAddress,hashPayload,executor,nonce,isAsyncExec
+   * evvmId,senderExecutro,hashPayload,executor,nonce,isAsyncExec
    */
   buildMessageToSign(
     evvmId: bigint,
+    senderExecutor: HexString,
     hashPayload: HexString,
-    executor: HexString = zeroAddress,
+    originExecutor: HexString,
     nonce: bigint,
     isAsyncExec: boolean,
   ): string {
     // ensure addresses are normalized to lowercase for deterministic signing
-    const serviceAddress = this.address.toLowerCase();
-    const executorAddress = executor.toLowerCase();
-
-    return `${evvmId.toString()},${serviceAddress},${hashPayload},${executorAddress},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
+    return `${evvmId.toString()},${senderExecutor.toLowerCase()},${hashPayload},${originExecutor.toLowerCase()},${nonce.toString()},${JSON.stringify(isAsyncExec)}`;
   }
 
   /**

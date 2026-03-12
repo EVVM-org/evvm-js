@@ -42,6 +42,7 @@ export class P2PSwap extends BaseService {
     tokenB,
     amountA,
     amountB,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     evvmSignedAction,
   }: {
@@ -50,6 +51,7 @@ export class P2PSwap extends BaseService {
     tokenB: HexString;
     amountA: bigint;
     amountB: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IMakeOrderData>> {
@@ -64,6 +66,7 @@ export class P2PSwap extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -73,14 +76,13 @@ export class P2PSwap extends BaseService {
 
     return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
-      metadata: {
-        nonce,
-        originExecutor,
-        tokenA,
-        tokenB,
-        amountA,
-        amountB,
-      },
+      tokenA,
+      tokenB,
+      amountA,
+      amountB,
+      senderExecutor,
+      originExecutor,
+      nonce,
       signature,
       priorityFeePay: evvmSignedAction.data.priorityFee,
       noncePay: evvmSignedAction.data.nonce,
@@ -104,6 +106,7 @@ export class P2PSwap extends BaseService {
     tokenA,
     tokenB,
     orderId,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     evvmSignedAction,
   }: {
@@ -111,6 +114,7 @@ export class P2PSwap extends BaseService {
     tokenA: HexString;
     tokenB: HexString;
     orderId: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     evvmSignedAction?: SignedAction<IPayData>;
   }): Promise<SignedAction<ICancelOrderData>> {
@@ -124,6 +128,7 @@ export class P2PSwap extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -133,14 +138,13 @@ export class P2PSwap extends BaseService {
 
     return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
-      metadata: {
-        nonce,
-        originExecutor,
-        tokenA,
-        tokenB,
-        orderId,
-        signature,
-      },
+      tokenA,
+      tokenB,
+      orderId,
+      senderExecutor,
+      originExecutor,
+      nonce,
+      signature,
       priorityFeePay: evvmSignedAction?.data.priorityFee,
       noncePay: evvmSignedAction?.data.nonce,
       signaturePay: evvmSignedAction?.data.signature,
@@ -165,6 +169,7 @@ export class P2PSwap extends BaseService {
     tokenB,
     orderId,
     amountOfTokenBToFill,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     evvmSignedAction,
   }: {
@@ -173,6 +178,7 @@ export class P2PSwap extends BaseService {
     tokenB: HexString;
     orderId: bigint;
     amountOfTokenBToFill: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IDispatchOrderData>> {
@@ -186,6 +192,7 @@ export class P2PSwap extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -195,15 +202,14 @@ export class P2PSwap extends BaseService {
 
     return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
-      metadata: {
-        nonce,
-        originExecutor,
-        tokenA,
-        tokenB,
-        orderId,
-        amountOfTokenBToFill: amountOfTokenBToFill,
-        signature,
-      },
+      tokenA,
+      tokenB,
+      orderId,
+      amountOfTokenBToFill: amountOfTokenBToFill,
+      senderExecutor,
+      originExecutor,
+      nonce,
+      signature,
       priorityFeePay: evvmSignedAction.data.priorityFee,
       noncePay: evvmSignedAction.data.nonce,
       signaturePay: evvmSignedAction.data.signature,
@@ -230,6 +236,7 @@ export class P2PSwap extends BaseService {
     orderId,
     amountOfTokenBToFill,
     maxFillFixedFee,
+    senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     evvmSignedAction,
   }: {
@@ -239,6 +246,7 @@ export class P2PSwap extends BaseService {
     orderId: bigint;
     amountOfTokenBToFill: bigint;
     maxFillFixedFee: bigint;
+    senderExecutor?: HexString;
     originExecutor?: HexString;
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IDispatchOrderFixedFeeData>> {
@@ -252,6 +260,7 @@ export class P2PSwap extends BaseService {
     });
     const message = this.buildMessageToSign(
       evvmId,
+      senderExecutor,
       hashPayload,
       originExecutor,
       nonce,
@@ -261,15 +270,14 @@ export class P2PSwap extends BaseService {
 
     return new SignedAction(this, evvmId, functionName, {
       user: this.signer.address,
-      metadata: {
-        nonce,
-        originExecutor,
-        tokenA,
-        tokenB,
-        orderId,
-        amountOfTokenBToFill: amountOfTokenBToFill,
-        signature,
-      },
+      tokenA,
+      tokenB,
+      orderId,
+      amountOfTokenBToFill: amountOfTokenBToFill,
+      senderExecutor,
+      originExecutor,
+      nonce,
+      signature,
       maxFillFixedFee,
       priorityFeePay: evvmSignedAction.data.priorityFee,
       noncePay: evvmSignedAction.data.nonce,

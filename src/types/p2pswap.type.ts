@@ -2,14 +2,13 @@ import type { HexString } from "./hexstring.type";
 
 export interface IMakeOrderData {
   user: HexString;
-  metadata: {
-    originExecutor: HexString;
-    nonce: bigint;
-    tokenA: HexString;
-    tokenB: HexString;
-    amountA: bigint;
-    amountB: bigint;
-  };
+  tokenA: HexString;
+  tokenB: HexString;
+  amountA: bigint;
+  amountB: bigint;
+  senderExecutor: HexString;
+  originExecutor: HexString;
+  nonce: bigint;
   signature: string;
   priorityFeePay?: bigint;
   noncePay: bigint;
@@ -18,14 +17,13 @@ export interface IMakeOrderData {
 
 export interface ICancelOrderData {
   user: HexString;
-  metadata: {
-    originExecutor: HexString;
-    nonce: bigint;
-    tokenA: HexString;
-    tokenB: HexString;
-    orderId: bigint;
-    signature: string;
-  };
+  tokenA: HexString;
+  tokenB: HexString;
+  orderId: bigint;
+  senderExecutor: HexString;
+  originExecutor: HexString;
+  nonce: bigint;
+  signature: string;
   priorityFeePay?: bigint;
   noncePay?: bigint;
   signaturePay?: string;
@@ -33,15 +31,14 @@ export interface ICancelOrderData {
 
 export interface IDispatchOrderData {
   user: HexString;
-  metadata: {
-    originExecutor: HexString;
-    nonce: bigint;
-    tokenA: HexString;
-    tokenB: HexString;
-    orderId: bigint;
-    amountOfTokenBToFill: bigint;
-    signature: string;
-  };
+  tokenA: HexString;
+  tokenB: HexString;
+  orderId: bigint;
+  amountOfTokenBToFill: bigint;
+  senderExecutor: HexString;
+  originExecutor: HexString;
+  nonce: bigint;
+  signature: string;
   priorityFeePay?: bigint;
   noncePay: bigint;
   signaturePay: string;
