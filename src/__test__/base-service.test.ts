@@ -238,6 +238,7 @@ describe("BaseService", () => {
     expect(
       service.buildMessageToSign(
         5n,
+        "0xabc0000000000000000000000000000000000000",
         "0xdeadbeef",
         "0x0000000000000000000000000000000000000000",
         9n,

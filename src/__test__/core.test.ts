@@ -24,6 +24,7 @@ describe("Core service", () => {
     expect(sa.functionName).toBe("pay");
     expect(sa.data.from).toBe(signer.address);
     expect(sa.data.token).toBe("0x2222222222222222222222222222222222222222");
+    expect(sa.data.priorityFee).toBe(0n);
     expect(typeof sa.data.signature).toBe("string");
     expect(sa.data.to_address).toBe(
       "0x1111111111111111111111111111111111111111",
@@ -51,6 +52,7 @@ describe("Core service", () => {
     expect(sa.functionName).toBe("pay");
     expect(sa.data.to_identity).toBe("alice");
     expect(sa.data.to_address).toBe(zeroAddress);
+    expect(sa.data.priorityFee).toBe(1n);
     expect(typeof sa.data.signature).toBe("string");
   });
 
@@ -106,6 +108,7 @@ describe("Core service", () => {
       nonce: 5n,
       isAsyncExec: false,
       senderExecutor: "0x3333333333333333333333333333333333333333",
+      originExecutor: "0x3333333333333333333333333333333333333333",
     });
 
     expect(sa.functionName).toBe("dispersePay");
@@ -117,6 +120,9 @@ describe("Core service", () => {
     );
     expect(sa.data.toData[0].to_identity).toBe("");
     expect(sa.data.token).toBe("0x2222222222222222222222222222222222222222");
+    expect(sa.data.priorityFee).toBe(0n);
+    expect(sa.data.senderExecutor).toBe("0x3333333333333333333333333333333333333333");
+    expect(sa.data.originExecutor).toBe("0x3333333333333333333333333333333333333333");
     expect(typeof sa.data.signature).toBe("string");
   });
 
@@ -148,9 +154,10 @@ describe("Core service", () => {
         tokenAddress: "0x2222222222222222222222222222222222222222",
         amount: 3n,
         priorityFee: 0n,
-        nonce: 5n,
-        isAsyncExec: false,
-        senderExecutor: "0x3333333333333333333333333333333333333333",
+      nonce: 5n,
+      isAsyncExec: false,
+      senderExecutor: "0x3333333333333333333333333333333333333333",
+      originExecutor: "0x3333333333333333333333333333333333333333",
       }),
     ).rejects.toThrow(/both toAddress and toIdentity/);
   });

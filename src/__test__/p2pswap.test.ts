@@ -35,8 +35,7 @@ describe("P2PSwap service", () => {
 
     expect(r.functionName).toBe("makeOrder");
     expect(r.data.user).toBe(signer.address);
-    expect(typeof r.data.metadata).toBe("object");
-    expect(r.data.metadata.nonce).toBe(1n);
+    expect(r.data.nonce).toBe(1n);
     expect(typeof r.data.signaturePay).toBe("string");
   });
 
