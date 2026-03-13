@@ -1,20 +1,29 @@
+import z from "zod";
 import type { BaseService } from "./base-service";
-import type { HexString, IAbiItem } from "@/types";
+import { AbiItemSchema, HexStringSchema, type IAbiItem } from "@/types";
 
 export interface IBaseDataSchema {
   [key: string]: any;
 }
 
-export interface ISerializableSignedAction<T> {
-  [key: string]: unknown; // allows compatibility with Record<string, unknown> type
-  functionName: string;
-  functionAbi: IAbiItem;
-  contractAddress: HexString;
-  chainId: number;
-  evvmId: string;
-  data: T;
-  args: any[];
-}
+export const getSerializableSignedActionSchema = <T extends z.ZodTypeAny>(
+  dataSchema: T,
+) =>
+  z
+    .object({
+      functionName: z.string(),
+      functionAbi: AbiItemSchema,
+      contractAddress: HexStringSchema,
+      chainId: z.number(),
+      evvmId: z.string(),
+      data: dataSchema,
+      args: z.array(z.any()),
+    })
+    .loose();
+
+export type ISerializableSignedAction<T> = z.infer<
+  ReturnType<typeof getSerializableSignedActionSchema<z.ZodType<T>>>
+>;
 
 /**
  * Signed EVVM action, result of a function call of a BaseService.

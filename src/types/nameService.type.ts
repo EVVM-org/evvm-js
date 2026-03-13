@@ -1,128 +1,149 @@
-import type { HexString } from "./hexstring.type";
+import { z } from "zod";
+import { HexStringSchema } from "./hexstring.type";
 
-export interface IAcceptOfferData {
-  user: HexString;
-  username: string;
-  offerID: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const AcceptOfferDataSchema = z.object({
+  user: HexStringSchema,
+  username: z.string(),
+  offerID: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IAcceptOfferData = z.infer<typeof AcceptOfferDataSchema>;
 
-export interface IAddCustomMetadataData {
-  user: HexString;
-  identity: string;
-  value: string;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const AddCustomMetadataDataSchema = z.object({
+  user: HexStringSchema,
+  identity: z.string(),
+  value: z.string(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IAddCustomMetadataData = z.infer<
+  typeof AddCustomMetadataDataSchema
+>;
 
-export interface IFlushCustomMetadataData {
-  user: HexString;
-  identity: string;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const FlushCustomMetadataDataSchema = z.object({
+  user: HexStringSchema,
+  identity: z.string(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IFlushCustomMetadataData = z.infer<
+  typeof FlushCustomMetadataDataSchema
+>;
 
-export interface IFlushUsernameData {
-  user: HexString;
-  username: string;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const FlushUsernameDataSchema = z.object({
+  user: HexStringSchema,
+  username: z.string(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IFlushUsernameData = z.infer<typeof FlushUsernameDataSchema>;
 
-export interface IMakeOfferData {
-  user: HexString;
-  username: string;
-  amount: bigint;
-  expirationDate: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const MakeOfferDataSchema = z.object({
+  user: HexStringSchema,
+  username: z.string(),
+  amount: z.bigint(),
+  expirationDate: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IMakeOfferData = z.infer<typeof MakeOfferDataSchema>;
 
-export interface IPreRegistrationUsernameData {
-  user: HexString;
-  hashPreRegisteredUsername: string;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const PreRegistrationUsernameDataSchema = z.object({
+  user: HexStringSchema,
+  hashPreRegisteredUsername: z.string(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IPreRegistrationUsernameData = z.infer<
+  typeof PreRegistrationUsernameDataSchema
+>;
 
-export interface IRegistrationUsernameData {
-  user: HexString;
-  username: string;
-  lockNumber: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const RegistrationUsernameDataSchema = z.object({
+  user: HexStringSchema,
+  username: z.string(),
+  lockNumber: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IRegistrationUsernameData = z.infer<
+  typeof RegistrationUsernameDataSchema
+>;
 
-export interface IRemoveCustomMetadataData {
-  user: HexString;
-  identity: string;
-  key: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const RemoveCustomMetadataDataSchema = z.object({
+  user: HexStringSchema,
+  identity: z.string(),
+  key: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IRemoveCustomMetadataData = z.infer<
+  typeof RemoveCustomMetadataDataSchema
+>;
 
-export interface IRenewUsernameData {
-  user: HexString;
-  username: string;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const RenewUsernameDataSchema = z.object({
+  user: HexStringSchema,
+  username: z.string(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IRenewUsernameData = z.infer<typeof RenewUsernameDataSchema>;
 
-export interface IWithdrawOfferData {
-  user: HexString;
-  username: string;
-  offerID: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const WithdrawOfferDataSchema = z.object({
+  user: HexStringSchema,
+  username: z.string(),
+  offerID: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IWithdrawOfferData = z.infer<typeof WithdrawOfferDataSchema>;

@@ -1,49 +1,57 @@
-import type { HexString } from "./hexstring.type";
+import { z } from "zod";
+import { HexStringSchema } from "./hexstring.type";
 
-export interface IMakeOrderData {
-  user: HexString;
-  tokenA: HexString;
-  tokenB: HexString;
-  amountA: bigint;
-  amountB: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay: bigint;
-  signaturePay: string;
-}
+export const MakeOrderDataSchema = z.object({
+  user: HexStringSchema,
+  tokenA: HexStringSchema,
+  tokenB: HexStringSchema,
+  amountA: z.bigint(),
+  amountB: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint(),
+  signaturePay: z.string(),
+});
+export type IMakeOrderData = z.infer<typeof MakeOrderDataSchema>;
 
-export interface ICancelOrderData {
-  user: HexString;
-  tokenA: HexString;
-  tokenB: HexString;
-  orderId: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const CancelOrderDataSchema = z.object({
+  user: HexStringSchema,
+  tokenA: HexStringSchema,
+  tokenB: HexStringSchema,
+  orderId: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type ICancelOrderData = z.infer<typeof CancelOrderDataSchema>;
 
-export interface IDispatchOrderData {
-  user: HexString;
-  tokenA: HexString;
-  tokenB: HexString;
-  orderId: bigint;
-  amountOfTokenBToFill: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay: bigint;
-  signaturePay: string;
-}
+export const DispatchOrderDataSchema = z.object({
+  user: HexStringSchema,
+  tokenA: HexStringSchema,
+  tokenB: HexStringSchema,
+  orderId: z.bigint(),
+  amountOfTokenBToFill: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint(),
+  signaturePay: z.string(),
+});
+export type IDispatchOrderData = z.infer<typeof DispatchOrderDataSchema>;
 
-export interface IDispatchOrderFixedFeeData extends IDispatchOrderData {
-  maxFillFixedFee: bigint;
-}
+// Inheritance using .extend()
+export const DispatchOrderFixedFeeDataSchema = DispatchOrderDataSchema.extend({
+  maxFillFixedFee: z.bigint(),
+});
+export type IDispatchOrderFixedFeeData = z.infer<
+  typeof DispatchOrderFixedFeeDataSchema
+>;

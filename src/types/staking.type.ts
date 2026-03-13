@@ -1,32 +1,36 @@
-import type { HexString } from "./hexstring.type";
+import { z } from "zod";
+import { HexStringSchema } from "./hexstring.type";
 
-export interface IPresaleStakingData {
-  user: HexString;
-  isStaking: boolean;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const PresaleStakingDataSchema = z.object({
+  user: HexStringSchema,
+  isStaking: z.boolean(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IPresaleStakingData = z.infer<typeof PresaleStakingDataSchema>;
 
-export interface IPublicStakingData {
-  user: HexString;
-  isStaking: boolean;
-  amountOfStaking: bigint;
-  senderExecutor: HexString;
-  originExecutor: HexString;
-  nonce: bigint;
-  signature: string;
-  priorityFeePay?: bigint;
-  noncePay?: bigint;
-  signaturePay?: string;
-}
+export const PublicStakingDataSchema = z.object({
+  user: HexStringSchema,
+  isStaking: z.boolean(),
+  amountOfStaking: z.bigint(),
+  senderExecutor: HexStringSchema,
+  originExecutor: HexStringSchema,
+  nonce: z.bigint(),
+  signature: z.string(),
+  priorityFeePay: z.bigint().optional(),
+  noncePay: z.bigint().optional(),
+  signaturePay: z.string().optional(),
+});
+export type IPublicStakingData = z.infer<typeof PublicStakingDataSchema>;
 
-export interface IGoldenStakingData {
-  isStaking: boolean;
-  amountOfStaking: bigint;
-  signaturePay?: string;
-}
+export const GoldenStakingDataSchema = z.object({
+  isStaking: z.boolean(),
+  amountOfStaking: z.bigint(),
+  signaturePay: z.string().optional(),
+});
+export type IGoldenStakingData = z.infer<typeof GoldenStakingDataSchema>;
