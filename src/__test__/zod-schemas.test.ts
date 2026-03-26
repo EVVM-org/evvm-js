@@ -23,7 +23,7 @@ describe("createSerializableSchema", () => {
     });
     const result = createSerializableSchema(schema);
     const parsed = result.parse({ user: { balance: 500n } });
-    expect(parsed.user.balance).toBe("500");
+    expect(parsed.user!.balance).toBe("500");
   });
 
   it("handles ZodArray with bigint elements", () => {
@@ -59,7 +59,7 @@ describe("createSerializableSchema", () => {
     const parsed = result.parse({
       level1: { level2: { bigintVal: 999n } },
     });
-    expect(parsed.level1.level2.bigintVal).toBe("999");
+    expect(parsed.level1!.level2!.bigintVal).toBe("999");
   });
 
   it("handles arrays of objects with bigint", () => {

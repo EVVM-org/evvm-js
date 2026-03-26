@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export function createSerializableSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
+function _transform(schema: z.ZodTypeAny): z.ZodTypeAny {
   if (schema instanceof z.ZodBigInt) {
-    return schema.transform((val) => val.toString());
+    return z.coerce.string<bigint>();
   }
 
   if (schema instanceof z.ZodObject) {
@@ -10,23 +10,47 @@ export function createSerializableSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
     const newShape: Record<string, z.ZodTypeAny> = {};
 
     for (const key in shape) {
-      newShape[key] = createSerializableSchema(shape[key]);
+      newShape[key] = _transform(shape[key] as z.ZodTypeAny);
     }
 
     return z.object(newShape);
   }
 
   if (schema instanceof z.ZodArray) {
-    return z.array(createSerializableSchema(schema.element));
+    return z.array(_transform(schema.element as z.ZodTypeAny));
   }
 
   if (schema instanceof z.ZodOptional) {
-    return createSerializableSchema(schema.unwrap()).optional();
+    return _transform(schema.unwrap() as z.ZodTypeAny).optional();
   }
 
   if (schema instanceof z.ZodNullable) {
-    return createSerializableSchema(schema.unwrap()).nullable();
+    return _transform(schema.unwrap() as z.ZodTypeAny).nullable();
   }
 
   return schema;
+}
+
+type SchemaOutput<T> = T extends z.ZodBigInt
+  ? string
+  : T extends z.ZodObject<infer S>
+    ? {
+        [K in keyof S]?: S[K] extends z.ZodOptional<any>
+          ? SchemaOutput<S[K] extends z.ZodOptional<infer O> ? O : never>
+          : SchemaOutput<S[K]>;
+      }
+    : T extends z.ZodArray<infer E>
+      ? SchemaOutput<E>[]
+      : T extends z.ZodOptional<infer O>
+        ? SchemaOutput<O> | undefined
+        : T extends z.ZodNullable<infer N>
+          ? SchemaOutput<N> | null
+          : T extends z.ZodType<infer _, infer O>
+            ? O
+            : never;
+
+export function createSerializableSchema<T extends z.ZodTypeAny>(
+  schema: T,
+): z.ZodType<SchemaOutput<T>> {
+  return _transform(schema) as z.ZodType<SchemaOutput<T>>;
 }
