@@ -1,6 +1,7 @@
 import z from "zod";
 import type { BaseService } from "./base-service";
 import { AbiItemSchema, HexStringSchema, type IAbiItem } from "@/types";
+import { createSerializableSchema } from "@/utils/zod-schemas";
 
 export interface IBaseDataSchema {
   [key: string]: any;
@@ -8,7 +9,15 @@ export interface IBaseDataSchema {
 
 export const getSerializableSignedActionSchema = <T extends z.ZodTypeAny>(
   dataSchema: T,
-) =>
+): z.ZodObject<{
+  functionName: z.ZodString;
+  functionAbi: typeof AbiItemSchema;
+  contractAddress: typeof HexStringSchema;
+  chainId: z.ZodNumber;
+  evvmId: z.ZodString;
+  data: ReturnType<typeof createSerializableSchema<T>>;
+  args: z.ZodArray<z.ZodAny>;
+}> =>
   z
     .object({
       functionName: z.string(),
@@ -16,7 +25,7 @@ export const getSerializableSignedActionSchema = <T extends z.ZodTypeAny>(
       contractAddress: HexStringSchema,
       chainId: z.number(),
       evvmId: z.string(),
-      data: dataSchema,
+      data: createSerializableSchema(dataSchema),
       args: z.array(z.any()),
     })
     .loose();
