@@ -37,7 +37,7 @@ Here's a quick example of how to use EVVM JS to sign a payment action:
 
 ```typescript
 import { Core, execute } from "@evvm/evvm-js";
-import { createSignerWithEthers } from "@evvm/evvm-js/signers";
+import { createSignerWithEthers } from "@evvm/evvm-js";
 import { ethers } from "ethers";
 
 // 1. Create a signer
