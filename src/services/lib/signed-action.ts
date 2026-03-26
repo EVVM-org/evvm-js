@@ -1,24 +1,20 @@
 import z from "zod";
 import type { BaseService } from "./base-service";
 import { AbiItemSchema, HexStringSchema, type IAbiItem } from "@/types";
-import { createSerializableSchema } from "@/utils/zod-schemas";
+import {
+  createSerializableSchema,
+  type SchemaOutput,
+  type SerializeBigInts,
+} from "@/utils/zod-schemas";
 
 export interface IBaseDataSchema {
   [key: string]: any;
 }
 
-export const getSerializableSignedActionSchema = <T extends z.ZodTypeAny>(
+export function getSerializableSignedActionSchema<T extends z.ZodTypeAny>(
   dataSchema: T,
-): z.ZodObject<{
-  functionName: z.ZodString;
-  functionAbi: typeof AbiItemSchema;
-  contractAddress: typeof HexStringSchema;
-  chainId: z.ZodNumber;
-  evvmId: z.ZodString;
-  data: ReturnType<typeof createSerializableSchema<T>>;
-  args: z.ZodArray<z.ZodAny>;
-}> =>
-  z
+) {
+  return z
     .object({
       functionName: z.string(),
       functionAbi: AbiItemSchema,
@@ -29,10 +25,21 @@ export const getSerializableSignedActionSchema = <T extends z.ZodTypeAny>(
       args: z.array(z.any()),
     })
     .loose();
+}
 
-export type ISerializableSignedAction<T> = z.infer<
-  ReturnType<typeof getSerializableSignedActionSchema<z.ZodType<T>>>
->;
+export type ISerializableSignedActionData<T> = T extends z.ZodTypeAny
+  ? SchemaOutput<T>
+  : never;
+
+export type ISerializableSignedAction<T> = {
+  functionName: string;
+  functionAbi: z.infer<typeof AbiItemSchema>;
+  contractAddress: z.infer<typeof HexStringSchema>;
+  chainId: number;
+  evvmId: string;
+  data: SerializeBigInts<T>;
+  args: unknown[];
+};
 
 /**
  * Signed EVVM action, result of a function call of a BaseService.
@@ -92,28 +99,24 @@ export class SignedAction<T extends IBaseDataSchema> {
         );
 
       // keep serialized representation (strings for bigints, nested objects/arrays preserved)
-      args[index] = serializedData[input.name];
+      args[index] = serializedData[input.name as keyof typeof serializedData];
     });
 
     return args;
   }
 
-  private serializeData(): T {
+  private serializeData(): SerializeBigInts<T> {
     const deepSerialize = (value: any): any => {
-      // serialize bigints
       if (typeof value === "bigint") return value.toString();
-      // serialize arrays
       if (Array.isArray(value)) return value.map((v) => deepSerialize(v));
-      // serialize objects
       if (value && typeof value === "object") {
         return Object.fromEntries(
           Object.entries(value).map(([k, v]) => [k, deepSerialize(v)]),
         );
       }
-      // else, it's a serializable object (primitive)
       return value;
     };
 
-    return deepSerialize(this.data) as T;
+    return deepSerialize(this.data) as SerializeBigInts<T>;
   }
 }

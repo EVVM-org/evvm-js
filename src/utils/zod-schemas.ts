@@ -2,7 +2,7 @@ import { z } from "zod";
 
 function _transform(schema: z.ZodTypeAny): z.ZodTypeAny {
   if (schema instanceof z.ZodBigInt) {
-    return z.coerce.string<bigint>();
+    return z.string();
   }
 
   if (schema instanceof z.ZodObject) {
@@ -31,13 +31,19 @@ function _transform(schema: z.ZodTypeAny): z.ZodTypeAny {
   return schema;
 }
 
-type SchemaOutput<T> = T extends z.ZodBigInt
+export type SchemaOutput<T> = T extends z.ZodBigInt
   ? string
   : T extends z.ZodObject<infer S>
     ? {
-        [K in keyof S]?: S[K] extends z.ZodOptional<any>
-          ? SchemaOutput<S[K] extends z.ZodOptional<infer O> ? O : never>
-          : SchemaOutput<S[K]>;
+        [K in keyof S as S[K] extends z.ZodOptional<any>
+          ? never
+          : K]: SchemaOutput<S[K]>;
+      } & {
+        [K in keyof S as S[K] extends z.ZodOptional<any>
+          ? K
+          : never]?: SchemaOutput<
+          S[K] extends z.ZodOptional<infer O> ? O : never
+        >;
       }
     : T extends z.ZodArray<infer E>
       ? SchemaOutput<E>[]
@@ -45,8 +51,8 @@ type SchemaOutput<T> = T extends z.ZodBigInt
         ? SchemaOutput<O> | undefined
         : T extends z.ZodNullable<infer N>
           ? SchemaOutput<N> | null
-          : T extends z.ZodType<infer _, infer O>
-            ? O
+          : T extends z.ZodTypeAny
+            ? z.infer<T>
             : never;
 
 export function createSerializableSchema<T extends z.ZodTypeAny>(
@@ -54,3 +60,13 @@ export function createSerializableSchema<T extends z.ZodTypeAny>(
 ): z.ZodType<SchemaOutput<T>> {
   return _transform(schema) as z.ZodType<SchemaOutput<T>>;
 }
+
+export type InferSerializable<T extends z.ZodTypeAny> = SchemaOutput<T>;
+
+export type SerializeBigInts<T> = T extends bigint
+  ? string
+  : T extends Array<infer U>
+    ? Array<SerializeBigInts<U>>
+    : T extends object
+      ? { [K in keyof T]: SerializeBigInts<T[K]> }
+      : T;
