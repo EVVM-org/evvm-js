@@ -75,6 +75,15 @@ export abstract class BaseService {
 
   /**
    * Encodes and hashes the given args according to the function ABI.
+   *
+   * @param functionName - The name of the function in the ABI
+   * @param args - Arguments to encode. Must match ABI parameters exactly or be
+   * defined in opts.customAbiParams.
+   * @param opts.customAbiParams - Additional ABI parameters to include in the hash
+   * that are NOT in the function ABI. Use this when you need extra parameters in the
+   * payload hash but they're not defined in the contract ABI. Each custom param has
+   * a name, type, and insertAfter (the ABI param name to insert after).
+   * @throws Error if args contains keys not present in the ABI (use customAbiParams for extra params)
    */
   buildHashPayload(
     functionName: string,
@@ -109,6 +118,11 @@ export abstract class BaseService {
     const usedInputsAbi = inputs.filter((input) =>
       Object.prototype.hasOwnProperty.call(args, input.name),
     );
+
+    if (Object.keys(args).length !== usedInputsAbi.length)
+      throw new Error(
+        "There are args not present in the abi, this will lead to errors. Use opts.customAbiParams to define them",
+      );
 
     const sortedArgs = usedInputsAbi.map((input) => args[input.name]);
 

@@ -143,6 +143,83 @@ describe("BaseService", () => {
     expect(service.buildHashPayload("myFunction", args)).toBe(expected);
   });
 
+  test("buildHashPayload throws when args contain extra keys not in ABI", () => {
+    const signer = makeSigner(1);
+    const service = new TestService({
+      signer,
+      address: "0xabc0000000000000000000000000000000000000",
+      abi: baseAbi,
+      chainId: 1,
+    });
+
+    expect(() =>
+      service.buildHashPayload("myFunction", {
+        a: 1n,
+        b: "0x1111111111111111111111111111111111111111",
+        extra: 42n,
+      }),
+    ).toThrow(
+      "There are args not present in the abi, this will lead to errors. Use opts.customAbiParams to define them",
+    );
+  });
+
+  test("buildHashPayload throws when ALL args are extra (none in ABI)", () => {
+    const signer = makeSigner(1);
+    const service = new TestService({
+      signer,
+      address: "0xabc0000000000000000000000000000000000",
+      abi: baseAbi,
+      chainId: 1,
+    });
+
+    expect(() =>
+      service.buildHashPayload("myFunction", {
+        foo: 1n,
+        bar: 2n,
+      }),
+    ).toThrow(
+      "There are args not present in the abi, this will lead to errors. Use opts.customAbiParams to define them",
+    );
+  });
+
+  test("buildHashPayload works with customAbiParams for extra args", () => {
+    const signer = makeSigner(1);
+    const service = new TestService({
+      signer,
+      address: "0xabc0000000000000000000000000000000000000",
+      abi: baseAbi,
+      chainId: 1,
+    });
+
+    const args = {
+      a: 1n,
+      extraParam: "hello",
+      b: "0x1111111111111111111111111111111111111111",
+    };
+
+    const inputsAbi = [
+      { type: "string" },
+      { name: "a", type: "uint256" },
+      { name: "extraParam", type: "string" },
+      { name: "b", type: "address" },
+    ];
+    const values = [
+      "myFunction",
+      args.a,
+      args.extraParam,
+      args.b,
+    ];
+    const expected = keccak256(encodeAbiParameters(inputsAbi, values));
+
+    expect(
+      service.buildHashPayload("myFunction", args, {
+        customAbiParams: [
+          { name: "extraParam", type: "string", insertAfter: "a" },
+        ],
+      }),
+    ).toBe(expected);
+  });
+
   test("buildHashPayload supports custom abi params", () => {
     const signer = makeSigner(1);
     const service = new TestService({
