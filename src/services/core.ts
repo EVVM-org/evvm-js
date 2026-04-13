@@ -52,6 +52,22 @@ export class Core extends BaseService {
   }
 
   /**
+   * Generates a new unique async nonce that hasn't been used before.
+   * @returns A new valid async nonce
+   */
+  async getAsyncNonce(): Promise<bigint> {
+    const buffer = new BigUint64Array(1);
+    let nonce: bigint = 0n;
+    let usedNonce: boolean = true;
+    while (usedNonce) {
+      crypto.getRandomValues(buffer);
+      nonce = buffer[0];
+      usedNonce = await this.getIfUsedAsyncNonce(nonce);
+    }
+    return nonce;
+  }
+
+  /**
    * Returns the balance of the given user
    */
   async getBalance(user: HexString, token: HexString): Promise<number> {
