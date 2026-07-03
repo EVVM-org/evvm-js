@@ -50,7 +50,7 @@ describe("P2PSwap service", () => {
     expect(r.data.user).toBe(signer.address);
   });
 
-  it("dispatchOrder fill proportional fee includes metadata and evvm signature", async () => {
+  it("dispatchOrder includes metadata and evvm signature", async () => {
     const evvmSignedAction = {
       data: {
         priorityFee: 0n,
@@ -59,41 +59,20 @@ describe("P2PSwap service", () => {
         signature: "esig2",
       },
     } as any;
-    const r = await svc.dispatchOrder_fillPropotionalFee({
+    const r = await svc.dispatchOrder({
       nonce: 3n,
       tokenA: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       tokenB: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       orderId: 1n,
-      amountOfTokenBToFill: 50n,
+      amountOut: 50n,
+      amountInMax: 55n,
       evvmSignedAction,
     } as any);
 
-    expect(r.functionName).toBe("dispatchOrder_fillPropotionalFee");
+    expect(r.functionName).toBe("dispatchOrder");
     expect(r.data.user).toBe(signer.address);
-    expect(typeof r.data.signaturePay).toBe("string");
-  });
-
-  it("dispatchOrder fill fixed fee includes maxFillFixedFee when present", async () => {
-    const evvmSignedAction = {
-      data: {
-        priorityFee: 0n,
-        nonce: 3n,
-        priorityFlag: false,
-        signature: "esig3",
-      },
-    } as any;
-    const r = await svc.dispatchOrder_fillFixedFee({
-      nonce: 4n,
-      tokenA: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      tokenB: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      orderId: 2n,
-      amountOfTokenBToFill: 10n,
-      maxFillFixedFee: 5n,
-      evvmSignedAction,
-    } as any);
-
-    expect(r.functionName).toBe("dispatchOrder_fillFixedFee");
-    expect(r.data.maxFillFixedFee).toBeDefined();
+    expect(r.data.amountOut).toBe(50n);
+    expect(r.data.amountInMax).toBe(55n);
     expect(typeof r.data.signaturePay).toBe("string");
   });
 });

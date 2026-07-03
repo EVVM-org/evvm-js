@@ -37,7 +37,8 @@ export const DispatchOrderDataSchema = z.object({
   tokenA: HexStringSchema,
   tokenB: HexStringSchema,
   orderId: z.bigint(),
-  amountOfTokenBToFill: z.bigint(),
+  amountOut: z.bigint(),
+  amountInMax: z.bigint(),
   senderExecutor: HexStringSchema,
   originExecutor: HexStringSchema,
   nonce: z.bigint(),
@@ -47,11 +48,3 @@ export const DispatchOrderDataSchema = z.object({
   signaturePay: z.string(),
 });
 export type IDispatchOrderData = z.infer<typeof DispatchOrderDataSchema>;
-
-// Inheritance using .extend()
-export const DispatchOrderFixedFeeDataSchema = DispatchOrderDataSchema.extend({
-  maxFillFixedFee: z.bigint(),
-});
-export type IDispatchOrderFixedFeeData = z.infer<
-  typeof DispatchOrderFixedFeeDataSchema
->;

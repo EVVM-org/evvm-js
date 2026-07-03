@@ -2,7 +2,6 @@ import type {
   HexString,
   ICancelOrderData,
   IDispatchOrderData,
-  IDispatchOrderFixedFeeData,
   IMakeOrderData,
   IPayData,
   IBaseServiceProps,
@@ -152,23 +151,25 @@ export class P2PSwap extends BaseService {
   }
 
   /**
-   * Create and sign a `dispatchOrder` action (proportional fee variant).
+   * Create and sign a `dispatchOrder` action.
    *
    * @param {bigint} nonce - Dispatch nonce
    * @param {HexString} tokenA - Token A address
    * @param {HexString} tokenB - Token B address
    * @param {bigint} orderId - Order identifier
-   * @param {bigint} amountOfTokenBToFill - Amount of token B to fill
+   * @param {bigint} amountOut - Amount of offeredToken the buyer receives
+   * @param {bigint} amountInMax - Max amount of requestedToken the buyer pays
    * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
    * @returns {Promise<SignedAction<IDispatchOrderData>>} Signed dispatch order action
    */
   @SignMethod
-  async dispatchOrder_fillPropotionalFee({
+  async dispatchOrder({
     nonce,
     tokenA,
     tokenB,
     orderId,
-    amountOfTokenBToFill,
+    amountOut,
+    amountInMax,
     senderExecutor = zeroAddress,
     originExecutor = zeroAddress,
     evvmSignedAction,
@@ -177,18 +178,21 @@ export class P2PSwap extends BaseService {
     tokenA: HexString;
     tokenB: HexString;
     orderId: bigint;
-    amountOfTokenBToFill: bigint;
+    amountOut: bigint;
+    amountInMax: bigint;
     senderExecutor?: HexString;
     originExecutor?: HexString;
     evvmSignedAction: SignedAction<IPayData>;
   }): Promise<SignedAction<IDispatchOrderData>> {
     const evvmId = await this.getEvvmID();
-    const functionName = "dispatchOrder_fillPropotionalFee";
+    const functionName = "dispatchOrder";
 
     const hashPayload = this.buildHashPayload(functionName, {
       tokenA,
       tokenB,
       orderId,
+      amountOut,
+      amountInMax,
     });
     const message = this.buildMessageToSign(
       evvmId,
@@ -205,80 +209,12 @@ export class P2PSwap extends BaseService {
       tokenA,
       tokenB,
       orderId,
-      amountOfTokenBToFill: amountOfTokenBToFill,
+      amountOut,
+      amountInMax,
       senderExecutor,
       originExecutor,
       nonce,
       signature,
-      priorityFeePay: evvmSignedAction.data.priorityFee,
-      noncePay: evvmSignedAction.data.nonce,
-      signaturePay: evvmSignedAction.data.signature,
-    });
-  }
-
-  /**
-   * Create and sign a `dispatchOrder` action (fixed fee variant).
-   *
-   * @param {bigint} nonce - Dispatch nonce
-   * @param {HexString} tokenA - Token A address
-   * @param {HexString} tokenB - Token B address
-   * @param {bigint} orderId - Order identifier
-   * @param {bigint} amountOfTokenBToFill - Amount of token B to fill
-   * @param {bigint} maxFillFixedFee - Max fixed fee for filling
-   * @param {SignedAction<IPayData>} evvmSignedAction - Underlying EVVM pay signed action
-   * @returns {Promise<SignedAction<IDispatchOrderFixedFeeData>>} Signed dispatch order action
-   */
-  @SignMethod
-  async dispatchOrder_fillFixedFee({
-    nonce,
-    tokenA,
-    tokenB,
-    orderId,
-    amountOfTokenBToFill,
-    maxFillFixedFee,
-    senderExecutor = zeroAddress,
-    originExecutor = zeroAddress,
-    evvmSignedAction,
-  }: {
-    nonce: bigint;
-    tokenA: HexString;
-    tokenB: HexString;
-    orderId: bigint;
-    amountOfTokenBToFill: bigint;
-    maxFillFixedFee: bigint;
-    senderExecutor?: HexString;
-    originExecutor?: HexString;
-    evvmSignedAction: SignedAction<IPayData>;
-  }): Promise<SignedAction<IDispatchOrderFixedFeeData>> {
-    const evvmId = await this.getEvvmID();
-    const functionName = "dispatchOrder_fillFixedFee";
-
-    const hashPayload = this.buildHashPayload(functionName, {
-      tokenA,
-      tokenB,
-      orderId,
-    });
-    const message = this.buildMessageToSign(
-      evvmId,
-      senderExecutor,
-      hashPayload,
-      originExecutor,
-      nonce,
-      true,
-    );
-    const signature = await this.signer.signMessage(message);
-
-    return new SignedAction(this, evvmId, functionName, {
-      user: this.signer.address,
-      tokenA,
-      tokenB,
-      orderId,
-      amountOfTokenBToFill: amountOfTokenBToFill,
-      senderExecutor,
-      originExecutor,
-      nonce,
-      signature,
-      maxFillFixedFee,
       priorityFeePay: evvmSignedAction.data.priorityFee,
       noncePay: evvmSignedAction.data.nonce,
       signaturePay: evvmSignedAction.data.signature,
